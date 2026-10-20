@@ -960,7 +960,7 @@
 </form>
     </main>
 
- <script>
+<script>
       // 1. 置頂按鈕功能
       let b = document.querySelector(".top");
       addEventListener("scroll", () =>
@@ -969,8 +969,10 @@
       b.onclick = () => scrollTo({ top: 0, behavior: "smooth" });
 
       // 2. 表單傳送到 Google 試算表功能
-      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwnlcMcrS3MBr05IpCZQe07874ILJn2V6kPjfNE-tFp8B4LUWjC2UgYZuJJ-zxSuhWp0A/exec";
+      // 只需要替換下面這行的網址：
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4DGU6rMseag8j31wYz_Vm2EilF8z4NCr55Hd3mCwk2ZFg9xnVYuqIatH55f4utmPnSw/exec";
 
+      // 以下全部都要保留喔！
       const form = document.getElementById("inquiryForm");
       form.addEventListener("submit", function (e) {
         e.preventDefault(); // 防止網頁重新整理
@@ -979,7 +981,7 @@
         submitBtn.textContent = "傳送中...";
         submitBtn.disabled = true;
 
-        // 收集表單資料
+        // 收集表單資料（必須保留）
         const formData = {
           name: form.name.value,
           contact: form.contact.value,
@@ -988,15 +990,18 @@
           message: form.message.value,
         };
 
-        // 發送到 Google 試算表
+        // 發送到 Google 試算表（必須保留）
         fetch(SCRIPT_URL, {
           method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "text/plain",
+          },
           body: JSON.stringify(formData),
         })
-          .then((response) => response.json())
-          .then((data) => {
+          .then(() => {
             submitBtn.textContent = "已收到，謝謝你的詢價！";
-            form.reset(); // 清空表單內容
+            form.reset(); // 清空表單
           })
           .catch((error) => {
             console.error("Error!", error);
@@ -1005,5 +1010,3 @@
           });
       });
     </script>
-  </body>
-</html>
