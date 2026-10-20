@@ -925,7 +925,7 @@
         </div>
       </section>
 
-      <!-- 聯絡表單 -->
+<!-- 聯絡表單 -->
       <section class="contact" id="contact">
         <div class="wrap">
           <div class="contactgrid">
@@ -944,69 +944,85 @@
                 <a href="#contact">Facebook 社團</a>
               </div>
             </div>
-               <form id="inquiryForm">
-  <input name="name" placeholder="你的稱呼" required />
-  <input name="contact" placeholder="LINE ID 或 Email" required />
-  <select name="service">
-    <option value="">想詢問的服務項目</option>
-    <option value="指定商品代購">指定商品代購</option>
-    <option value="展覽 / 快閃店代購">展覽 / 快閃店代購</option>
-    <option value="現貨 / 預購選物">現貨 / 預購選物</option>
-    <option value="其他問題">其他問題</option>
-  </select>
-  <input name="link" placeholder="商品連結（選填）" />
-  <textarea name="message" placeholder="想找什麼呢？請告訴我商品、數量與你的需求。" required></textarea>
-  <button class="btn" type="submit">送出詢價單 →</button>
-</form>
+
+            <form id="inquiryForm">
+              <input name="name" placeholder="你的稱呼" required />
+              <input name="contact" placeholder="LINE ID 或 Email" required />
+              <select name="service">
+                <option value="">想詢問的服務項目</option>
+                <option value="指定商品代購">指定商品代購</option>
+                <option value="展覽 / 快閃店代購">展覽 / 快閃店代購</option>
+                <option value="現貨 / 預購選物">現貨 / 預購選物</option>
+                <option value="其他問題">其他問題</option>
+              </select>
+              <input name="link" placeholder="商品連結（選填）" />
+              <textarea name="message" placeholder="想找什麼呢？請告訴我商品、數量與你的需求。" required></textarea>
+              <button class="btn" type="submit">送出詢價單 →</button>
+            </form>
+          </div>
+
+          <footer class="footer">
+            <span>© 2026 ROJI OSHIKATSU NOTE. All rights reserved.</span>
+            <span>Made with warmth in Japan & Taiwan.</span>
+          </footer>
+        </div>
+      </section>
     </main>
 
-<script>
+    <!-- 返回頂部按鈕 (不可漏掉，否則 JS 會出錯) -->
+    <button class="top" aria-label="回到頂端">↑</button>
+
+    <script>
       // 1. 置頂按鈕功能
       let b = document.querySelector(".top");
-      addEventListener("scroll", () =>
-        b.classList.toggle("show", scrollY > 500)
-      );
-      b.onclick = () => scrollTo({ top: 0, behavior: "smooth" });
+      if (b) {
+        addEventListener("scroll", () =>
+          b.classList.toggle("show", scrollY > 500)
+        );
+        b.onclick = () => scrollTo({ top: 0, behavior: "smooth" });
+      }
 
       // 2. 表單傳送到 Google 試算表功能
-      // 只需要替換下面這行的網址：
       const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4DGU6rMseag8j31wYz_Vm2EilF8z4NCr55Hd3mCwk2ZFg9xnVYuqIatH55f4utmPnSw/exec";
 
-      // 以下全部都要保留喔！
       const form = document.getElementById("inquiryForm");
-      form.addEventListener("submit", function (e) {
-        e.preventDefault(); // 防止網頁重新整理
+      if (form) {
+        form.addEventListener("submit", function (e) {
+          e.preventDefault(); // 防止網頁重新整理跳頁
 
-        const submitBtn = form.querySelector('button[type="submit"]');
-        submitBtn.textContent = "傳送中...";
-        submitBtn.disabled = true;
+          const submitBtn = form.querySelector('button[type="submit"]');
+          submitBtn.textContent = "傳送中...";
+          submitBtn.disabled = true;
 
-        // 收集表單資料（必須保留）
-        const formData = {
-          name: form.name.value,
-          contact: form.contact.value,
-          service: form.service.value,
-          link: form.link.value,
-          message: form.message.value,
-        };
+          // 收集表單資料
+          const formData = {
+            name: form.name.value,
+            contact: form.contact.value,
+            service: form.service.value,
+            link: form.link.value,
+            message: form.message.value,
+          };
 
-        // 發送到 Google 試算表（必須保留）
-        fetch(SCRIPT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "text/plain",
-          },
-          body: JSON.stringify(formData),
-        })
-          .then(() => {
-            submitBtn.textContent = "已收到，謝謝你的詢價！";
-            form.reset(); // 清空表單
+          // 發送到 Google 試算表
+          fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+              "Content-Type": "text/plain",
+            },
+            body: JSON.stringify(formData),
           })
-          .catch((error) => {
-            console.error("Error!", error);
-            submitBtn.textContent = "送出失敗，請直接加 LINE 聯繫";
-            submitBtn.disabled = false;
-          });
-      });
+            .then(() => {
+              submitBtn.textContent = "已收到，謝謝你的詢價！";
+              form.reset(); // 清空表單
+            })
+            .catch((error) => {
+              console.error("Error!", error);
+              submitBtn.textContent = "送出失敗，請直接加 LINE 聯繫";
+              submitBtn.disabled = false;
+            });
+        });
+      }
     </script>
+  </body>
+</html>
