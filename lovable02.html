@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="路地推活手帖｜日本在地代購與選物" />
+    <title>路地推活手帖｜日本在地代購・選物</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Noto+Sans+TC:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --ink: #263329;
+        --moss: #5f775d;
+        --cream: #faf7f0;
+        --sand: #e8ddcc;
+        --peach: #eaa982;
+        --rose: #c96c62;
+        --leaf: #dfe8d8;
+        --paper: #fffdf8;
+        --line: #26332924;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--cream);
+        font: 15px/1.8 "Noto Sans TC", sans-serif;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .wrap {
+        width: min(1120px, calc(100% - 40px));
+        margin: auto;
+      }
+
+      .section {
+        padding: 95px 0;
+      }
+
+      .eyebrow {
+        color: var(--rose);
+        font: 700 11px "Zen Maru Gothic";
+        letter-spacing: 0.13em;
+      }
+
+      .eyebrow:before {
+        content: "✦ ";
+        font-size: 14px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h2 {
+        font: 400 clamp(30px, 4vw, 47px) / 1.28 "DM Serif Display", "Noto Sans TC",
+          serif;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 13px 21px;
+        border: 1px solid;
+        border-radius: 99px;
+        font-weight: 700;
+        transition: 0.2s;
+      }
+
+      .btn:hover {
+        transform: translateY(-3px);
+      }
+
+      .main {
+        background: var(--ink);
+        color: #fff;
+        border-color: var(--ink);
+      }
+
+      .arrow {
+        font-size: 20px;
+      }
+
+      header {
+        height: 80px;
+        position: absolute;
+        z-index: 2;
+        inset: 0 0 auto;
+        color: #fff;
+      }
+
+      .nav {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .brand {
+        font: 700 19px/1 "Zen Maru Gothic";
+        letter-spacing: 0.08em;
+      }
+
+      .brand small {
+        display: block;
+        font: 9px sans-serif;
+        letter-spacing: 0.17em;
+        margin-top: 5px;
+      }
+
+      .navlinks {
+        display: flex;
+        gap: 27px;
+        align-items: center;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .navlinks .navorder {
+        padding: 7px 14px;
+        border: 1px solid #fff9;
+        border-radius: 99px;
+      }
+
+      .hero {
+        min-height: 720px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        color: #fff;
+        background: linear-gradient(
+            100deg,
+            #1a271ee0 0%,
+            #263729a8 54%,
+            #26372930
+          ),
+          url("https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&w=2000&q=85")
+            center/cover;
+      }
+
+      .hero .wrap {
+        padding-top: 60px;
+        z-index: 1;
+      }
+
+      .hero .eyebrow {
+        color: #f5cfb6;
+      }
+
+      .hero h1 {
+        font: 400 clamp(46px, 7vw, 82px) / 1.12 "DM Serif Display",
+          "Noto Sans TC", serif;
+        margin: 20px 0;
+      }
+
+      .hero em {
+        color: #f6c1a4;
+      }
+
+      .hero p {
+        max-width: 520px;
+        font-size: 17px;
+        color: #fffd;
+        margin-bottom: 30px;
+      }
+
+      .hero .main {
+        background: var(--peach);
+        border-color: var(--peach);
+        color: #45291e;
+      }
+
+      .intro {
+        background: var(--paper);
+      }
+
+      .introgrid {
+        display: grid;
+        grid-template-columns: 1fr 1.4fr;
+        gap: 90px;
+        align-items: center;
+      }
+
+      .portrait {
+        aspect-ratio: 1;
+        max-width: 420px;
+        border-radius: 50%;
+        background: linear-gradient(#0001, #0001),
+          url("https://idolish70610-ctrl.github.io/web_1020/Gemini_Generated_Image_ukxsgukxsgukxsgu.jpg")
+            center/cover;
+      }
+
+      .intro h2 {
+        margin: 12px 0 20px;
+      }
+
+      .intro p {
+        color: #59635a;
+        font-size: 16px;
+      }
+
+      .sign {
+        font: italic 30px "DM Serif Display";
+        color: var(--moss);
+      }
+
+      .strengths {
+        background: var(--leaf);
+      }
+
+      .head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 25px;
+        margin-bottom: 42px;
+      }
+
+      .head h2 {
+        margin: 10px 0 0;
+      }
+
+      .head > p {
+        max-width: 350px;
+        color: #607062;
+      }
+
+      .grid3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+      }
+
+      .strength {
+        background: var(--paper);
+        padding: 32px 27px;
+        min-height: 260px;
+      }
+
+      .num {
+        font: italic 48px "DM Serif Display";
+        color: #cbd8c3;
+      }
+
+      .strength h3 {
+        font: 700 19px "Zen Maru Gothic";
+        margin: 28px 0 9px;
+      }
+
+      .strength p,
+      .service p {
+        font-size: 13px;
+        color: #627063;
+      }
+
+      .tag {
+        font-size: 11px;
+        color: #9d594d;
+        background: #fff5ec;
+        padding: 4px 10px;
+        border-radius: 99px;
+        font-weight: bold;
+      }
+
+      .card {
+        background: #fff;
+        border: 1px solid var(--line);
+        transition: 0.2s;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px #26332918;
+      }
+
+      .pic {
+        height: 245px;
+        background-size: cover;
+        background-position: center;
+      }
+
+      .card:nth-child(1) .pic {
+        background-image: url("https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=700&q=80");
+      }
+
+      .card:nth-child(2) .pic {
+        background-image: url("https://images.unsplash.com/photo-1492571350019-22de08371fd3?auto=format&fit=crop&w=700&q=80");
+      }
+
+      .card:nth-child(3) .pic {
+        background-image: url("https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=700&q=80");
+      }
+
+      .service {
+        padding: 21px;
+      }
+
+      .service h3 {
+        font: 700 18px "Zen Maru Gothic";
+        margin: 10px 0 7px;
+      }
+
+      .process {
+        background: #324637;
+        color: #f6f3ea;
+      }
+
+      .process .eyebrow {
+        color: #edb493;
+      }
+
+      .process h2 {
+        margin: 11px 0 40px;
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
+      }
+
+      .dot {
+        width: 68px;
+        height: 68px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: #eff0e6;
+        color: var(--ink);
+        font: italic 27px "DM Serif Display";
+      }
+
+      .step h3 {
+        font: 700 17px "Zen Maru Gothic";
+        margin: 17px 0 5px;
+      }
+
+      .step p {
+        font-size: 13px;
+        color: #fffb;
+      }
+
+      .gallery {
+        background: #f3ebdf;
+      }
+
+      .gallerygrid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr 0.85fr;
+        grid-template-rows: 220px 220px;
+        gap: 14px;
+      }
+
+      .tile {
+        background-size: cover;
+        background-position: center;
+        position: relative;
+      }
+
+      .tile:after {
+        content: attr(data-label);
+        position: absolute;
+        inset: auto 0 0;
+        padding: 28px 16px 13px;
+        background: linear-gradient(transparent, #172017cc);
+        color: #fff;
+        font: 700 14px "Zen Maru Gothic";
+        opacity: 0;
+        transition: 0.2s;
+      }
+
+      .tile:hover:after {
+        opacity: 1;
+      }
+
+      .tile:first-child {
+        grid-row: span 2;
+        background-image: url("https://images.unsplash.com/photo-1608889335941-32ac5f2041b9?auto=format&fit=crop&w=800&q=80");
+      }
+
+      .tile:nth-child(2) {
+        background-image: url("https://images.unsplash.com/photo-1620392218830-ab85ec63aefc?auto=format&fit=crop&w=600&q=80");
+      }
+
+      .tile:nth-child(3) {
+        background-image: url("https://images.unsplash.com/photo-1517816428104-797678c7cf0c?auto=format&fit=crop&w=600&q=80");
+      }
+
+      .tile:nth-child(4) {
+        background-image: url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80");
+      }
+
+      .tile:nth-child(5) {
+        background-image: url("https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=600&q=80");
+      }
+
+      .quotes {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .quote {
+        border-top: 2px solid var(--moss);
+        padding: 24px 8px;
+      }
+
+      .stars {
+        color: #d88659;
+        letter-spacing: 3px;
+      }
+
+      .quote blockquote {
+        font-size: 18px;
+        margin: 15px 0;
+      }
+
+      .quote cite {
+        font-size: 13px;
+        color: #687168;
+      }
+
+      .notice {
+        padding: 75px 0;
+        background: #eec0a6;
+      }
+
+      .noticebox {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 70px;
+        align-items: center;
+      }
+
+      .notice h2 {
+        margin: 12px 0;
+      }
+
+      .notice p {
+        color: #5e4235;
+      }
+
+      .notice ul {
+        padding: 0;
+        list-style: none;
+        font-size: 13px;
+      }
+
+      .notice li:before {
+        content: "✓";
+        color: #a34e42;
+        font-weight: bold;
+        margin-right: 8px;
+      }
+
+      .faq details {
+        border-bottom: 1px solid var(--line);
+        padding: 14px 0;
+      }
+
+      .faq summary {
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .faq p {
+        font-size: 13px;
+        color: #607062;
+        margin: 8px 0;
+      }
+
+      .contact {
+        background: #2e4032;
+        color: #fff;
+        padding: 90px 0 30px;
+      }
+
+      .contactgrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+      }
+
+      .contact .eyebrow {
+        color: #efb293;
+      }
+
+      .contact h2 {
+        margin: 12px 0;
+      }
+
+      .contact p {
+        color: #fffb;
+      }
+
+      .socials {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .socials a {
+        border: 1px solid #fff7;
+        border-radius: 99px;
+        padding: 9px 13px;
+        font-size: 12px;
+      }
+
+      form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 11px;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        background: #fff1;
+        border: 1px solid #fff5;
+        color: #fff;
+        font: 14px "Noto Sans TC";
+      }
+
+      select option {
+        color: #222;
+      }
+
+      textarea,
+      form button {
+        grid-column: span 2;
+      }
+
+      textarea {
+        min-height: 100px;
+      }
+
+      form button {
+        justify-content: center;
+        background: var(--peach);
+        border: 0;
+        color: #39251e;
+      }
+
+      .footer {
+        margin-top: 65px;
+        border-top: 1px solid #fff3;
+        padding-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        color: #fff9;
+        font-size: 11px;
+      }
+
+      .top {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        border: 0;
+        border-radius: 50%;
+        width: 42px;
+        height: 42px;
+        background: var(--ink);
+        color: #fff;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .top.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      @media (max-width: 760px) {
+        .navlinks {
+          display: none;
+        }
+
+        .section {
+          padding: 65px 0;
+        }
+
+        .hero {
+          min-height: 640px;
+        }
+
+        .introgrid,
+        .noticebox,
+        .contactgrid {
+          grid-template-columns: 1fr;
+          gap: 32px;
+        }
+
+        .portrait {
+          max-width: 300px;
+        }
+
+        .head {
+          display: block;
+        }
+
+        .head > p {
+          margin-top: 15px;
+        }
+
+        .grid3 {
+          grid-template-columns: 1fr;
+        }
+
+        .steps {
+          grid-template-columns: 1fr 1fr;
+          gap: 25px;
+        }
+
+        .gallerygrid {
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: 190px 150px 150px;
+        }
+
+        .tile:first-child {
+          grid-column: span 2;
+          grid-row: auto;
+        }
+
+        .quotes {
+          grid-template-columns: 1fr;
+        }
+
+        form {
+          grid-template-columns: 1fr;
+        }
+
+        textarea,
+        form button {
+          grid-column: span 1;
+        }
+
+        .footer {
+          display: block;
+        }
+
+        .footer span {
+          display: block;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 頁頭導覽列 -->
+    <header>
+      <nav class="wrap nav">
+        <a class="brand" href="#home">
+          路地推活手帖
+          <small>ROJI OSHIKATSU NOTE</small>
+        </a>
+        <div class="navlinks">
+          <a href="#about">關於我</a>
+          <a href="#services">方案服務</a>
+          <a href="#gallery">案例展示</a>
+          <a href="#faq">購物須知</a>
+          <a class="navorder" href="#contact">詢價 / 下單</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Hero 主視覺區塊 -->
+      <section class="hero" id="home">
+        <div class="wrap">
+          <span class="eyebrow">Your Japan shopping companion</span>
+          <h1>
+            把喜愛的每一刻，<br />
+            <em>收藏進日常。</em>
+          </h1>
+          <p>
+            從日本巷弄裡的限定驚喜，到讓人心動的推活小物。由懂你的在地買手，為你完成每一次安心的跨海相遇。
+          </p>
+          <a class="btn main" href="#contact">
+            開始詢價 <b class="arrow">→</b>
+          </a>
+          <a class="btn" href="#services">看看服務內容</a>
+        </div>
+      </section>
+
+      <!-- 關於我 -->
+      <section class="section intro" id="about">
+        <div class="wrap introgrid">
+          <div class="portrait"></div>
+          <div>
+            <span class="eyebrow">About roji</span>
+            <h2>
+              你好，我是你在日本的<br />
+              推活好夥伴。
+            </h2>
+            <p>
+              歡迎來到「路地推活手帖」！我是品牌主理人，在日本個人代購與選物領域深耕
+              5 年。這裡專為喜愛 ACG 文化、日系生活雜貨的你，留下一個可以輕鬆挖寶與自在交流的小天地。
+            </p>
+            <p>
+              我相信代購不只是交易，而是把每一份喜歡好好送到你手上的過程。從現場連線、細心挑選，到加強包裝寄出，每一步都以同好的心意完成。
+            </p>
+            <div class="sign">With love from Japan.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 競爭優勢 / 為什麼選擇我們 -->
+      <section class="section strengths">
+        <div class="wrap">
+          <div class="head">
+            <div>
+              <span class="eyebrow">Why choose us</span>
+              <h2>懂你的熱情，也守護你的期待。</h2>
+            </div>
+            <p>把在地經驗、選物眼光與朋友般的溫度，放進每一次的採購旅程。</p>
+          </div>
+          <div class="grid3">
+            <article class="strength">
+              <div class="num">01</div>
+              <h3>5 年日本在地經驗</h3>
+              <p>熟悉實體通路與限定活動節奏，為你精準鎖定想要的寶物。</p>
+            </article>
+            <article class="strength">
+              <div class="num">02</div>
+              <h3>正品把關・透明報價</h3>
+              <p>來源清楚、計費公開，讓每一筆委託都能安心交給我。</p>
+            </article>
+            <article class="strength">
+              <div class="num">03</div>
+              <h3>細心包裝・即時溝通</h3>
+              <p>防撞加固、進度回報，讓等待包裹的日子也充滿期待。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 方案服務 -->
+      <section class="section" id="services">
+        <div class="wrap">
+          <div class="head">
+            <div>
+              <span class="eyebrow">Services & pricing</span>
+              <h2>
+                你想找的日本好物，<br />
+                一起把它帶回家。
+              </h2>
+            </div>
+            <a class="btn" href="#contact">我要委託詢價 →</a>
+          </div>
+          <div class="grid3">
+            <article class="card">
+              <div class="pic"></div>
+              <div class="service">
+                <span class="tag">REQUEST</span>
+                <h3>指定商品代購</h3>
+                <p>提供商品連結、照片或關鍵字，我會協助確認庫存與報價。</p>
+              </div>
+            </article>
+            <article class="card">
+              <div class="pic"></div>
+              <div class="service">
+                <span class="tag">LIMITED</span>
+                <h3>展覽・快閃店代購</h3>
+                <p>動漫展、Pop-up Store 與期間限定活動，現場連線幫你搶。</p>
+              </div>
+            </article>
+            <article class="card">
+              <div class="pic"></div>
+              <div class="service">
+                <span class="tag">CURATION</span>
+                <h3>嚴選現貨・預購選物</h3>
+                <p>每月連線與少量現貨，把巷弄裡的驚喜分享給你。</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 購買流程 -->
+      <section class="section process">
+        <div class="wrap">
+          <span class="eyebrow">How it works</span>
+          <h2>簡單四步驟，讓喜歡順利抵達。</h2>
+          <div class="steps">
+            <div class="step">
+              <div class="dot">01</div>
+              <h3>填寫詢價</h3>
+              <p>傳送商品資訊、數量與需求，越完整越能快速報價。</p>
+            </div>
+            <div class="step">
+              <div class="dot">02</div>
+              <h3>確認報價</h3>
+              <p>商品金額 × 匯率 + 代購費 + 國際運費，透明清楚。</p>
+            </div>
+            <div class="step">
+              <div class="dot">03</div>
+              <h3>日本採購</h3>
+              <p>完成付款後安排採購，重要進度會主動分享。</p>
+            </div>
+            <div class="step">
+              <div class="dot">04</div>
+              <h3>安心到貨</h3>
+              <p>細心防撞包裝，透過郵局、超商或宅配寄送回台。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 案例展示區塊 -->
+      <section class="section gallery" id="gallery">
+        <div class="wrap">
+          <div class="head">
+            <div>
+              <span class="eyebrow">Selection showcase</span>
+              <h2>
+                路地裡尋得的，<br />
+                每一份心動。
+              </h2>
+            </div>
+            <p>精選採購實拍・包裝日常</p>
+          </div>
+          <div class="gallerygrid">
+            <div class="tile" data-label="動漫 IP・推活周邊"></div>
+            <div class="tile" data-label="日系生活選物"></div>
+            <div class="tile" data-label="限定活動代購"></div>
+            <div class="tile" data-label="細心防撞包裝"></div>
+            <div class="tile" data-label="開箱的快樂時刻"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 顧客評價 -->
+      <section class="section">
+        <div class="wrap">
+          <div class="head">
+            <div>
+              <span class="eyebrow">Love notes</span>
+              <h2>
+                謝謝你們，分享收到喜歡時<br />
+                閃閃發光的樣子。
+              </h2>
+            </div>
+            <p>每一個回饋，都是我繼續尋寶的理由。</p>
+          </div>
+          <div class="quotes">
+            <article class="quote">
+              <div class="stars">★★★★★</div>
+              <blockquote>
+                「第一次找代購就遇到這麼懂推活的人！展場限定真的幫我買到了，包裝也超級仔細。」
+              </blockquote>
+              <cite>— 小羽 ・ 咒術迴戰周邊委託</cite>
+            </article>
+            <article class="quote">
+              <div class="stars">★★★★★</div>
+              <blockquote>
+                「溝通像跟朋友聊天一樣舒服，每次連線都忍不住想跟著逛。收到包裹的儀式感滿滿！」
+              </blockquote>
+              <cite>— Nini ・ 日系雜貨選物</cite>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 購物須知與 FAQ -->
+      <section class="notice" id="faq">
+        <div class="wrap noticebox">
+          <div>
+            <span class="eyebrow">Shopping notice</span>
+            <h2>購物前，先和你說。</h2>
+            <p>為了讓每一次的委託都順利又安心，以下幾個小提醒請先閱讀。</p>
+            <ul>
+              <li>預購與限定商品不接受取消</li>
+              <li>不協助代購違禁或仿冒品</li>
+              <li>報價保留時間依商品狀況為準</li>
+              <li>請認明官方帳號，慎防詐騙</li>
+            </ul>
+          </div>
+          <div class="faq">
+            <details>
+              <summary>詢價時需要提供什麼資料？</summary>
+              <p>
+                請提供商品圖片或連結、品名、款式、數量與預算；限定商品也請附上活動日期與地點。
+              </p>
+            </details>
+            <details>
+              <summary>報價後多久要付款？</summary>
+              <p>
+                現貨與熱門商品庫存變動快速，建議在報價後 24
+                小時內完成確認與付款。
+              </p>
+            </details>
+            <details>
+              <summary>商品抵達台灣大概需要幾天？</summary>
+              <p>
+                一般日本寄出後約 7–14
+                天；展覽或預購商品將另行告知時程。
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- 聯絡表單 -->
+      <section class="contact" id="contact">
+        <div class="wrap">
+          <div class="contactgrid">
+            <div>
+              <span class="eyebrow">Let’s find it together</span>
+              <h2>
+                把你的願望清單<br />
+                交給我吧。
+              </h2>
+              <p>
+                想找的限定品、想問的報價，或只是想一起聊聊最近的推活，都歡迎來訊息。也可以追蹤社群，掌握每一次的日本連線！
+              </p>
+              <div class="socials">
+                <a href="#contact">LINE 官方帳號</a>
+                <a href="#contact">Instagram</a>
+                <a href="#contact">Facebook 社團</a>
+              </div>
+            </div>
+            <form
+              onsubmit="event.preventDefault();this.querySelector('button').textContent='已收到，謝謝你的詢價！'"
+            >
+              <input placeholder="你的稱呼" required />
+              <input placeholder="LINE ID 或 Email" required />
+              <select>
+                <option>想詢問的服務項目</option>
+                <option>指定商品代購</option>
+                <option>展覽 / 快閃店代購</option>
+                <option>現貨 / 預購選物</option>
+              </select>
+              <input placeholder="商品連結（選填）" />
+              <textarea
+                placeholder="想找什麼呢？請告訴我商品、數量與你的需求。"
+                required
+              ></textarea>
+              <button class="btn" type="submit">送出詢價單 →</button>
+            </form>
+          </div>
+          <footer class="footer">
+            <span>© 2026 ROJI OSHIKATSU NOTE. All rights reserved.</span>
+            <span>Made with warmth in Japan & Taiwan.</span>
+          </footer>
+        </div>
+      </section>
+    </main>
+
+    <!-- 返回頂部按鈕 -->
+    <button class="top" aria-label="回到頂端">↑</button>
+
+    <script>
+      let b = document.querySelector(".top");
+      addEventListener("scroll", () =>
+        b.classList.toggle("show", scrollY > 500)
+      );
+      b.onclick = () => scrollTo({ top: 0, behavior: "smooth" });
+    </script>
+  </body>
+</html>
