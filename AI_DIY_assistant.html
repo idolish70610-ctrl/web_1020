@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>自己做 DIY Baking - 全功能 AI 門市隨身口譯助理 (整合旗艦版)</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: #f4f0ea;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 12px;
+      color: #332c27;
+    }
+    .mobile-app-container {
+      width: 100%;
+      max-width: 430px;
+      height: 880px;
+      background: #fdfbf7;
+      border-radius: 38px;
+      box-shadow: 0 20px 50px rgba(78, 64, 53, 0.15);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      border: 1.5px solid #eae3d9;
+    }
+
+    /* 頂部 Header & 多國語言列 */
+    .app-header {
+      background: #f7f3ec;
+      padding: 18px 16px 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ebd8d0;
+    }
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #738240;
+      color: #ffffff;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .header-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #382f29;
+      margin-top: 3px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .lang-selector {
+      display: flex;
+      gap: 2px;
+      background: #eae3d8;
+      padding: 3px;
+      border-radius: 16px;
+    }
+    .lang-btn {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 4px 7px;
+      border-radius: 12px;
+      color: #6e6359;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      transition: all 0.2s ease;
+    }
+    .lang-btn.active {
+      background: #ffffff;
+      color: #738240;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    /* 主選單 Tab 導引列 */
+    .main-nav-tabs {
+      display: flex;
+      background: #efe8dd;
+      border-bottom: 1px solid #e0d5c5;
+    }
+    .nav-tab-btn {
+      flex: 1;
+      padding: 10px 2px;
+      border: none;
+      background: transparent;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #7a6e62;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .nav-tab-btn.active {
+      background: #fdfbf7;
+      color: #d96b43;
+      border-bottom: 3px solid #d96b43;
+    }
+
+    /* 內容可滾動區域 */
+    .view-container {
+      flex: 1;
+      padding: 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .view-pane {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .view-pane.active {
+      display: flex;
+    }
+
+    /* 標題與卡片元件 */
+    .section-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #574c43;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .section-title span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* 1. 入店 4 步驟流程卡 */
+    .flow-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .flow-card {
+      background: #fcf6ed;
+      border: 1px solid #f2e2d0;
+      border-radius: 12px;
+      padding: 8px;
+      text-align: center;
+    }
+    .flow-icon { font-size: 20px; margin-bottom: 2px; }
+    .flow-step { font-size: 11px; font-weight: 800; color: #d96b43; }
+    .flow-text { font-size: 10.5px; color: #6e6359; margin-top: 1px; font-weight: 600; }
+
+    /* 2. 9步驟 SOP 階段選單與卡片 */
+    .phase-sub-tabs {
+      display: flex;
+      gap: 5px;
+      background: #f4efe6;
+      padding: 4px;
+      border-radius: 12px;
+    }
+    .phase-sub-btn {
+      flex: 1;
+      padding: 6px 2px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      font-size: 11px;
+      font-weight: 700;
+      color: #6e6359;
+      cursor: pointer;
+    }
+    .phase-sub-btn.active {
+      background: #738240;
+      color: #ffffff;
+    }
+
+    .sop-card {
+      background: #ffffff;
+      border: 1.5px solid #f0e6da;
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.02);
+    }
+    .sop-badge {
+      font-size: 10px;
+      font-weight: 800;
+      color: #d96b43;
+      background: #fceee6;
+      padding: 2px 7px;
+      border-radius: 6px;
+      width: fit-content;
+    }
+    .sop-title-zh { font-size: 13.5px; font-weight: 800; color: #2b231d; }
+    .sop-trans-text {
+      font-size: 12px;
+      color: #4a3e35;
+      background: #faf6f0;
+      padding: 8px;
+      border-radius: 8px;
+      line-height: 1.4;
+      font-weight: 600;
+      border-left: 3px solid #d96b43;
+    }
+    .card-actions {
+      display: flex;
+      gap: 6px;
+      justify-content: flex-end;
+      margin-top: 4px;
+    }
+    .btn-mini {
+      background: #f4efe6;
+      border: 1px solid #e5dcd0;
+      color: #4a3e35;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .btn-mini.primary {
+      background: #d96b43;
+      color: #ffffff;
+      border-color: #d96b43;
+    }
+
+    /* 3. 門市地圖與分區卡片 */
+    .map-box {
+      background: #ffffff;
+      border: 1.5px solid #f0e6da;
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .map-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .zone-card {
+      background: #f9f6f0;
+      border: 1px solid #ebd8d0;
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+    .zone-card-title { font-size: 12.5px; font-weight: 800; color: #2b231d; }
+    .zone-card-en { font-size: 10px; color: #738240; font-weight: 700; margin-top: 2px; }
+    .zone-card-desc { font-size: 10px; color: #7a6e62; margin-top: 4px; }
+
+    /* 4. AI 對話與快捷 Scenario Chips */
+    .scenarios-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .scenarios-bar::-webkit-scrollbar { display: none; }
+    .chip-btn {
+      background: #f4efe6;
+      border: 1px solid #e6ddd1;
+      color: #574c43;
+      padding: 6px 12px;
+      border-radius: 18px;
+      font-size: 11.5px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .chip-btn.active {
+      background: #d96b43;
+      color: #ffffff;
+      border-color: #d96b43;
+      box-shadow: 0 3px 8px rgba(217, 107, 67, 0.25);
+    }
+
+    .ai-card {
+      background: #ffffff;
+      border: 1.5px solid #f3e6d8;
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 6px 16px rgba(217, 107, 67, 0.06);
+    }
+    .ai-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .ai-tag {
+      background: #fceee6;
+      color: #d96b43;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 10px;
+    }
+    .zh-summary {
+      font-size: 12px;
+      color: #6e6359;
+      font-weight: 600;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed #eee7dd;
+      line-height: 1.35;
+    }
+    .speech-box {
+      background: #faf6f0;
+      border-left: 4px solid #d96b43;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .speech-text {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #2b231d;
+      line-height: 1.45;
+    }
+
+    /* 底部輸入列 */
+    .input-bar {
+      background: #ffffff;
+      padding: 10px 14px 16px 14px;
+      border-top: 1px solid #f2ebe1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .mic-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #fceee6;
+      color: #d96b43;
+      border: 1px solid #fcdbca;
+      font-size: 17px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .mic-btn.recording {
+      background: #d96b43;
+      color: #ffffff;
+      animation: pulse 1s infinite;
+    }
+    .text-input {
+      flex: 1;
+      height: 40px;
+      background: #f7f3ec;
+      border: 1px solid #e5dcd0;
+      border-radius: 20px;
+      padding: 0 14px;
+      font-size: 12.5px;
+      outline: none;
+      color: #382f29;
+    }
+    .send-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #738240;
+      color: #ffffff;
+      border: none;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 8px rgba(115, 130, 64, 0.2);
+    }
+
+    /* 📱 滿版大字 Modal (Flip to Guest) */
+    .fullscreen-modal {
+      display: none;
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #111111;
+      color: #ffffff;
+      z-index: 2000;
+      padding: 30px 20px 24px 20px;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      border-radius: 38px;
+    }
+    .fullscreen-modal.active { display: flex; }
+    .modal-tag { color: #ff8c42; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; }
+    .big-text {
+      font-size: 23px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.5;
+      margin: auto 0;
+      white-space: pre-line;
+    }
+    .close-big-btn {
+      background: #ff8c42;
+      color: #111111;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14.5px;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mobile-app-container">
+    
+    <!-- 頂部品牌 Header & 語言切換 -->
+    <div class="app-header">
+      <div>
+        <span class="brand-badge">自己做 DIY BAKING</span>
+        <div class="header-title">🌿 AI 門市隨身口譯助理</div>
+      </div>
+      <div class="lang-selector">
+        <button class="lang-btn active" onclick="setLang('en', this)">🇬🇧 EN</button>
+        <button class="lang-btn" onclick="setLang('jp', this)">🇯🇵 JP</button>
+        <button class="lang-btn" onclick="setLang('kr', this)">🇰🇷 KR</button>
+        <button class="lang-btn" onclick="setLang('vn', this)">🇻🇳 VN</button>
+      </div>
+    </div>
+
+    <!-- 主選單 Tab 導引列 -->
+    <div class="main-nav-tabs">
+      <button class="nav-tab-btn active" onclick="switchNavTab('sops', this)">📋 9步驟 SOP</button>
+      <button class="nav-tab-btn" onclick="switchNavTab('flow', this)">📱 流程與規章</button>
+      <button class="nav-tab-btn" onclick="switchNavTab('map', this)">🗺️ 門市導覽</button>
+      <button class="nav-tab-btn" onclick="switchNavTab('ai', this)">💬 AI 即時對話</button>
+    </div>
+
+    <!-- 內容滾動視窗 -->
+    <div class="view-container">
+      
+      <!-- PANE 1: 9步驟接待 SOP (含三個階段分頁) -->
+      <div class="view-pane active" id="pane-sops">
+        <div class="phase-sub-tabs">
+          <button class="phase-sub-btn active" onclick="switchPhase(1, this)">1. 迎賓報到結帳</button>
+          <button class="phase-sub-btn" onclick="switchPhase(2, this)">2. 會員與集點</button>
+          <button class="phase-sub-btn" onclick="switchPhase(3, this)">3. 導覽與製作</button>
+        </div>
+        <div id="sopCardList" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- 動態載入 SOP 卡片 -->
+        </div>
+      </div>
+
+      <!-- PANE 2: 入店流程卡 + 4大規章解說卡 -->
+      <div class="view-pane" id="pane-flow">
+        
+        <div class="section-title">
+          <span>📱 30秒入店體驗流程 (Store Flow)</span>
+        </div>
+        <div class="flow-grid">
+          <div class="flow-card">
+            <div class="flow-icon">🍰</div>
+            <div class="flow-step">1. Pick & Pay</div>
+            <div class="flow-text">選甜點並結帳</div>
+          </div>
+          <div class="flow-card">
+            <div class="flow-icon">🧼</div>
+            <div class="flow-step">2. Store & Wash</div>
+            <div class="flow-text">放包包與洗手</div>
+          </div>
+          <div class="flow-card">
+            <div class="flow-icon">🥣</div>
+            <div class="flow-step">3. Collect Tools</div>
+            <div class="flow-text">拿取食材與器具</div>
+          </div>
+          <div class="flow-card">
+            <div class="flow-icon">🧽</div>
+            <div class="flow-step">4. Clean & Pack</div>
+            <div class="flow-text">洗碗歸位與打包</div>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top: 6px;">
+          <span>📜 門市 4 大規章一鍵多國語言卡</span>
+        </div>
+        
+        <!-- 規章 1: 壽星與陪伴費 -->
+        <div class="sop-card">
+          <span class="sop-badge">消費規章 Policy</span>
+          <div class="sop-title-zh">🎂 壽星優惠與 $149 陪伴費規定</div>
+          <div class="sop-trans-text" id="policy-bday-text">-</div>
+          <div class="card-actions">
+            <button class="btn-mini" onclick="speakCurrentText('policy-bday-text')">🔊 發音</button>
+            <button class="btn-mini primary" onclick="showBigTextById('policy-bday-text')">📱 大字展示</button>
+          </div>
+        </div>
+
+        <!-- 規章 2: 容器使用規則 -->
+        <div class="sop-card">
+          <span class="sop-badge">器具安全 Safety</span>
+          <div class="sop-title-zh">🥣 容器使用鐵律 (一個碗裝一種)</div>
+          <div class="sop-trans-text" id="policy-bowl-text">-</div>
+          <div class="card-actions">
+            <button class="btn-mini" onclick="speakCurrentText('policy-bowl-text')">🔊 發音</button>
+            <button class="btn-mini primary" onclick="showBigTextById('policy-bowl-text')">📱 大字展示</button>
+          </div>
+        </div>
+
+        <!-- 規章 3: 自助清洗與僅供外帶 -->
+        <div class="sop-card">
+          <span class="sop-badge">環境規範 Environment</span>
+          <div class="sop-title-zh">🧽 全自助器皿清洗與僅供外帶</div>
+          <div class="sop-trans-text" id="policy-wash-text">-</div>
+          <div class="card-actions">
+            <button class="btn-mini" onclick="speakCurrentText('policy-wash-text')">🔊 發音</button>
+            <button class="btn-mini primary" onclick="showBigTextById('policy-wash-text')">📱 大字展示</button>
+          </div>
+        </div>
+
+        <!-- 規章 4: 預約與體驗時間 -->
+        <div class="sop-card">
+          <span class="sop-badge">時間規範 Duration</span>
+          <div class="sop-title-zh">⏱️ 預約保留 10 分鐘與體驗時間</div>
+          <div class="sop-trans-text" id="policy-time-text">-</div>
+          <div class="card-actions">
+            <button class="btn-mini" onclick="speakCurrentText('policy-time-text')">🔊 發音</button>
+            <button class="btn-mini primary" onclick="showBigTextById('policy-time-text')">📱 大字展示</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PANE 3: 門市 4 大區域導覽地圖 -->
+      <div class="view-pane" id="pane-map">
+        <div class="section-title">
+          <span>🗺️ 門市 4 大區域全景導覽 (Store Layout)</span>
+        </div>
+        <div class="map-box">
+          <div style="font-size: 11.5px; color: #7a6e62; font-weight: 700; margin-bottom: 6px;">🧭 現場大方向區域指引：</div>
+          <div class="map-grid">
+            <div class="zone-card">
+              <div style="font-size: 22px;">🧭</div>
+              <div class="zone-card-title">中間左右區</div>
+              <div class="zone-card-en">Ingredients Station</div>
+              <div class="zone-card-desc">取料區 (粉類/配料)</div>
+            </div>
+            <div class="zone-card">
+              <div style="font-size: 22px;">🪟</div>
+              <div class="zone-card-title">靠窗區</div>
+              <div class="zone-card-en">Mixing Area</div>
+              <div class="zone-card-desc">電動攪拌區</div>
+            </div>
+            <div class="zone-card">
+              <div style="font-size: 22px;">🔥</div>
+              <div class="zone-card-title">取料區後面</div>
+              <div class="zone-card-en">Decor & Ovens</div>
+              <div class="zone-card-desc">裝飾區與烤箱區</div>
+            </div>
+            <div class="zone-card">
+              <div style="font-size: 22px;">🧽</div>
+              <div class="zone-card-title">再往後走</div>
+              <div class="zone-card-en">Washing Sinks</div>
+              <div class="zone-card-desc">自助洗滌區</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 門市容器使用指南 -->
+        <div class="sop-card" style="margin-top: 4px;">
+          <span class="sop-badge">容器對照 Container Guide</span>
+          <div class="sop-title-zh">🥣 彩色塑膠碗 vs 白色瓷碗</div>
+          <div class="sop-trans-text" id="map-container-guide-text">-</div>
+          <div class="card-actions">
+            <button class="btn-mini primary" onclick="showBigTextById('map-container-guide-text')">📱 大字展示</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANE 4: AI 即時對話與語音輸入 -->
+      <div class="view-pane" id="pane-ai">
+        <div class="section-title">
+          <span>⚡ 高頻對話快捷鈕 (Quick Scenario)</span>
+        </div>
+        <div class="scenarios-bar">
+          <button class="chip-btn active" id="chip-birthday" onclick="selectScenario('birthday')">🎂 壽星陪伴費</button>
+          <button class="chip-btn" id="chip-allergen" onclick="selectScenario('allergen')">⚠️ 過敏原成分</button>
+          <button class="chip-btn" id="chip-location" onclick="selectScenario('location')">📍 剪刀模具位置</button>
+          <button class="chip-btn" id="chip-wash" onclick="selectScenario('wash')">🧼 自助洗滌區</button>
+        </div>
+
+        <div class="ai-card">
+          <div class="ai-header">
+            <div class="ai-tag" id="aiTag">✨ AI 口譯建議 (Target: English)</div>
+            <div style="font-size:10px; color:#a39688; font-weight:700;">即時雙向轉換</div>
+          </div>
+          <div class="zh-summary" id="zhSummary">💡 說明重點：熱情祝賀壽星，並說明陪伴者需選擇製作品項或付陪伴費以維護門市體驗品質。</div>
+          <div class="speech-box">
+            <div class="speech-text" id="targetSpeech">
+              "Happy Birthday! 🎉 Our Birthday Special offers a free cake for the birthday star! To ensure everyone has a great seat, companions are required to select a dessert or choose a companion fee. That way, both of you can enjoy the DIY fun together!"
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-mini" onclick="speakCurrentText('targetSpeech')">🔊 播放發音</button>
+            <button class="btn-mini" onclick="copyCurrentText('targetSpeech')">📋 複製話術</button>
+            <button class="btn-mini primary" onclick="showBigTextById('targetSpeech')">📱 大字展示</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 底部即時輸入列 (固定在底端) -->
+    <div class="input-bar">
+      <button class="mic-btn" id="micBtn" onclick="toggleMic()" title="點擊語音輸入">🎙️</button>
+      <input type="text" id="userInput" class="text-input" placeholder="輸入中文提問或需求，AI 即時口譯...">
+      <button class="send-btn" onclick="sendInput()" title="傳送">⚡</button>
+    </div>
+
+    <!-- 📱 滿版大字 Modal (Show to Guest) -->
+    <div class="fullscreen-modal" id="bigTextModal">
+      <div class="modal-tag">📱 請將螢幕轉向外籍顧客觀看 (FLIP TO GUEST)</div>
+      <div class="big-text" id="bigTextContent">-</div>
+      <button class="close-big-btn" onclick="closeBigText()">點擊關閉視窗 (Close)</button>
+    </div>
+
+  </div>
+
+  <script>
+    let currentLang = 'en';
+    let currentPhase = 1;
+    let currentScenarioKey = 'birthday';
+
+    const langVoiceMap = {
+      en: { code: 'en-US', label: 'English', gtxCode: 'en' },
+      jp: { code: 'ja-JP', label: '日本語', gtxCode: 'ja' },
+      kr: { code: 'ko-KR', label: '한국어', gtxCode: 'ko' },
+      vn: { code: 'vi-VN', label: 'Tiếng Việt', gtxCode: 'vi' }
+    };
+
+    // 9 步驟 SOP 資料庫 (對接門市實務)
+    const sopDatabase = {
+      1: [
+        {
+          num: "Step 1",
+          zh: "1. 招呼與詢問預約",
+          en: "Welcome to DIY Baking Club! Do you have a reservation?",
+          jp: "いらっしゃいませ！ご予約はございますか？",
+          kr: "안녕하세요! 예약하셨나요?",
+          vn: "Chào mừng bạn đến với DIY Baking Club! Bạn có đặt chỗ trước không?"
+        },
+        {
+          num: "Step 2",
+          zh: "2. 核對預約姓名與電話末三碼",
+          en: "May I have your name and the last 3 digits of your phone number?",
+          jp: "お名前とお電話番号の下3桁を教えていただけますか？",
+          kr: "성함과 전화번호 뒷 3자리를 말씀해 주시겠어요?",
+          vn: "Cho mình xin tên và 3 số cuối số điện thoại nhé?"
+        },
+        {
+          num: "Step 3",
+          zh: "3. 確認要做品項 / 展示菜單",
+          en: "Here is our menu. Which dessert would you like to make today?",
+          jp: "こちらがメニューです。本日お作りになるスイーツをお選びください。",
+          kr: "메뉴판입니다. 오늘 어떤 디저트를 만드시겠어요?",
+          vn: "Đây là menu ạ. Hôm nay bạn muốn làm món bánh nào?"
+        },
+        {
+          num: "Step 4",
+          zh: "4. 結帳 (僅 Cash/LINE Pay) 與載具詢問",
+          en: "Payment is via Cash or LINE Pay only. Do you have an e-invoice carrier?",
+          jp: "お支払いは現金またはLINE Payのみです。電子レシートのキャリアはお持ちですか？",
+          kr: "결제는 현금과 LINE Pay만 가능합니다. 모바일 영수증 바코드가 있으신가요?",
+          vn: "Bên mình chỉ nhận Tiền mặt và LINE Pay. Bạn có mã hóa đơn điện tử không?"
+        }
+      ],
+      2: [
+        {
+          num: "Step 5",
+          zh: "5. 掃 QR Code 加入 LINE 社群與密碼",
+          en: "Scan this QR code to join our LINE group! Enter the password shown on this card.",
+          jp: "QRコードをスキャンしてLINEグループにご参加ください！パスワードはカードにあります。",
+          kr: "QR 코드를 스캔하여 LINE 그룹에 가입해 보세요! 비밀번호는 카드에 있습니다.",
+          vn: "Quét mã QR này để tham gia nhóm LINE nhé! Mật khẩu có trên thẻ QR."
+        },
+        {
+          num: "Step 6",
+          zh: "6. 點擊置頂連結 (登入自己人會員與優惠券)",
+          en: "Click the pinned post in LINE to access our Member System & Coupons!",
+          jp: "LINEのピン留め投稿をタップして、会員システムとクーポンをご確認ください！",
+          kr: "LINE 상단 고정 공지를 눌러 회원 시스템과 쿠폰을 확인해 보세요!",
+          vn: "Bấm vào tin nhắn ghim trong LINE để vào hệ thống thành viên và xem ưu đãi nhé!"
+        },
+        {
+          num: "Step 6-1",
+          zh: "6-1. 出示會員 QR Code 讓店員掃描集點",
+          en: "To collect points, open your Member QR code and I'll scan it for you!",
+          jp: "ポイントを貯めるには、会員QRコードを表示してください。スキャンいたします！",
+          kr: "적립을 원하시면 회원 QR 코드를 보여주세요. 스캔해 드릴게요!",
+          vn: "Để tích điểm, bạn mở mã QR thành viên để mình quét nhé!"
+        }
+      ],
+      3: [
+        {
+          num: "Step 7",
+          zh: "7. 寄物 ➔ 圍裙 ➔ 洗手 ➔ 座位等待開啟平板",
+          en: "Please put your bags in a locker ➔ put on an apron ➔ wash your hands ➔ return to your seat. I'll set up your tablet!",
+          jp: "ロッカーに荷物を入れ ➔ エプロンを着け ➔ 手を洗い ➔ お席でお待ちください。タブレットをご用意します！",
+          kr: "사물함에 짐을 넣고 ➔ 앞치마를 두르고 ➔ 손을 씻고 ➔ 자리에 앉아 기다려 주세요. 태블릿을 켜드릴게요!",
+          vn: "Bạn cất đồ vào tủ ➔ đeo tạp dề ➔ rửa tay ➔ về chỗ ngồi chờ mình mở máy tính bảng nhé!"
+        },
+        {
+          num: "Step 8",
+          zh: "8. 平板右滑操作與門市 4 大區域導覽",
+          en: "Swipe right for instructions. Check tablet for item locations:\n🧭 Middle: Ingredients\n🪟 Window: Mixing\n🔥 Behind: Decor & Ovens\n🧽 Back: Washing Sinks",
+          jp: "右スワイプで手順が進みます。\n🧭 中央: 材料区\n🪟 窓側: ミキサー区\n🔥 後方: 装飾・オーブン\n🧽 一番奥: 洗い場",
+          kr: "오른쪽으로 넘기면 다음 단계입니다.\n🧭 중앙: 재료 구역\n🪟 창가: 반죽 구역\n🔥 뒤쪽: 장식 및 오븐\n🧽 맨 안쪽: 설거지 구역",
+          vn: "Vuốt sang phải để xem hướng dẫn.\n🧭 Ở giữa: Nguyên liệu\n🪟 Cửa sổ: Đánh bột\n🔥 Phía sau: Trang trí & Lò nướng\n🧽 Trong cùng: Khu rửa"
+        },
+        {
+          num: "Step 9",
+          zh: "9. 開始 DIY 製作與問答提示",
+          en: "You can start now! If you have any questions, feel free to ask us anytime. Enjoy!",
+          jp: "それではスタートです！ご不明な点があれば、いつでもスタッフにお声がけください！",
+          kr: "이제 시작하시면 됩니다! 궁금한 점이 있으면 언제든 편하게 물어보세요!",
+          vn: "Bạn có thể bắt đầu làm rồi! Nếu có thắc mắc gì cứ hỏi mình nhé!"
+        }
+      ]
+    };
+
+    // 4 大門市規章多國語言資料庫
+    const policyData = {
+      bday: {
+        en: "Happy Birthday! 🎉 Birthday stars get a free cake! Companions need to pick a dessert or pay a NT\$149 companion fee so everyone has a seat!",
+        jp: "お誕生日おめでとうございます！🎂 主役の方はケーキ1個無料！お席確保のため、ご同伴者様はスイーツ1品選択か同伴料（149元）を頂戴しております。",
+        kr: "생일 축하합니다! 🎉 생일자는 케이크 1개 무료! 좌석 확보를 위해 동반인은 디저트 1개 선택 또는 동반료(NT\$149) 결제가 필요합니다.",
+        vn: "Chúc mừng sinh nhật! 🎉 Người có sinh nhật được tặng 1 bánh miễn phí! Để có chỗ ngồi, người đi cùng cần chọn 1 món bánh hoặc trả phí đi cùng (149 TWD)."
+      },
+      bowl: {
+        en: "1 bowl per ingredient!\n🟢 Plastic Bowl = Dry & Cold items (No microwave!)\n⚪ Ceramic Bowl = Butter & Microwavable liquids.",
+        jp: "1つのボウルに1つの材料！\n🟢 プラスチック = 粉類・冷藏（レンジ不可）\n⚪ 陶器ボウル = バター・加熱用（レンジ可）",
+        kr: "1개 볼에 1개 재료만!\n🟢 플라스틱 볼 = 가루/냉장 (전자레인지 불가!)\n⚪ 도자기 볼 = 버터/액체 (전자레인지 가능)",
+        vn: "1 bát chứa 1 nguyên liệu!\n🟢 Bát nhựa = Bột & Đồ lạnh (Không quay vi sóng!)\n⚪ Bát sứ = Bơ & Chất lỏng quay vi sóng."
+      },
+      wash: {
+        en: "We are a self-service studio! Please wash and return all tools after baking. Cakes are for takeaway only (no dine-in).",
+        jp: "完全セルフサービスです。使用後の道具は洗って元の場所へお戻しください。ケーキはお持ち帰りのみ（店内飲食不可）となります。",
+        kr: "셀프 스튜디오입니다! 사용하신 도구는 직접 설거지 후 제자리에 놓아주세요. 케이크는 포장만 가능합니다 (매장 취식 불가).",
+        vn: "Mô hình tự phục vụ! Vui lòng tự rửa và cất dụng cụ sau khi làm xong. Bánh chỉ mang về (không ăn tại cửa hàng)."
+      },
+      time: {
+        en: "Reservations are held for 10 minutes. DIY session is 2 hours. Please enjoy your baking experience!",
+        jp: "ご予約は10分間保持されます。体験時間は2時間です。どうぞお楽しみください！",
+        kr: "예약은 10분간 유지됩니다. 이용 시간은 2시간입니다. 즐거운 시간 되세요!",
+        vn: "Đặt chỗ được giữ trong 10 phút. Thời gian làm bánh là 2 tiếng. Chúc bạn vui vẻ!"
+      }
+    };
+
+    // AI 對話模式範例資料庫
+    const multiLangData = {
+      birthday: {
+        inquiry: "「顧客是壽星，問說為什麼朋友一定要再點一個品項，不能只陪他做蛋糕？」",
+        summary: "💡 說明重點：熱情祝賀壽星，並說明陪伴者需選擇製作品項或付陪伴費以維護門市體驗品質。",
+        speech: policyData.bday
+      },
+      allergen: {
+        inquiry: "「外籍顧客詢問這款月餅/蛋糕是否含有花生、堅果或蛋奶成分？」",
+        summary: "💡 說明重點：確認無堅果/花生成分，但含有麩質與蛋奶，並提供原料標示卡。",
+        speech: {
+          en: "This recipe is 100% peanut and tree-nut free! However, it contains dairy, eggs, and gluten. Please let us know if you have any severe allergies!",
+          jp: "このレシピはピーナッツ・ナッツ類不使用です！ただし、乳製品、卵、小麦粉（グルテン）が含まれています。",
+          kr: "이 레시피는 땅콩 및 견과류가 전혀 들어가지 않습니다! 하지만 유제품, 계란, 글루텐이 포함되어 있습니다.",
+          vn: "Công thức này hoàn toàn không có đậu phộng và hạt! Tuy nhiên, nó có chứa sữa, trứng và gluten."
+        }
+      },
+      location: {
+        inquiry: "「顧客找不到剪刀與方模具在哪裡？」",
+        summary: "💡 說明重點：引導至洞洞牆區 A2 與模具區 D 層架。",
+        speech: {
+          en: "The scissors are on the Pegboard Wall (Hook A2), and the Square Molds are located at Molds Station (Shelf D). I can walk you there!",
+          jp: "ハサミは有孔ボードエリア（フックA2）にあり、角型金型は型エリア（棚D）にございます。ご案内いたします！",
+          kr: "가위는 페그보드 벽(고리 A2)에 있고, 사각 틀은 몰드 구역(선반 D)에 있습니다. 제가 안내해 드릴게요!",
+          vn: "Kéo ở trên Tường Tấm Lỗ (Móc A2), và Khuôn Vuông ở Khu Vực Khuôn (Kệ D). Tôi có thể dẫn bạn đến đó!"
+        }
+      },
+      wash: {
+        inquiry: "「外籍顧客詢問用過的器具要放哪裡洗滌？」",
+        summary: "💡 說明重點：說明自助洗滌區位置，並提示提供溫水與烘乾設備。",
+        speech: {
+          en: "Please bring used bowls and tools to our Self-Washing Area. We provide warm water, dish soap, and drying racks for your convenience!",
+          jp: "ご使用済みのボウルや道具はセルフ洗面エリアへお持ちください。温水、洗剤、乾燥ラックをご用意しております！",
+          kr: "사용하신 용기와 도구는 셀프 세척 구역으로 가져가 주시면 됩니다. 따뜻한 물, 세제, 건조대가 준비되어 있습니다!",
+          vn: "Vui lòng mang bát và dụng cụ đã sử dụng đến Khu Vực Tự Rửa. Chúng tôi có sẵn nước ấm, nước rửa bát và giá sấy khô!"
+        }
+      }
+    };
+
+    // TAB 頁面切換
+    function switchNavTab(paneId, btnElem) {
+      document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+      btnElem.classList.add('active');
+
+      document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
+      document.getElementById('pane-' + paneId).classList.add('active');
+    }
+
+    // SOP 階段切換
+    function switchPhase(phaseNum, btnElem) {
+      currentPhase = phaseNum;
+      document.querySelectorAll('.phase-sub-btn').forEach(b => b.classList.remove('active'));
+      btnElem.classList.add('active');
+      renderSOPCards();
+    }
+
+    // 渲染 SOP 卡片
+    function renderSOPCards() {
+      const container = document.getElementById('sopCardList');
+      container.innerHTML = '';
+      const items = sopDatabase[currentPhase];
+
+      items.forEach((item, index) => {
+        const transText = item[currentLang];
+        const cardHtml = `
+          <div class="sop-card">
+            <span class="sop-badge">${item.num}</span>
+            <div class="sop-title-zh">${item.zh}</div>
+            <div class="sop-trans-text" id="sop-text-${currentPhase}-${index}">${transText.replace(/\n/g, '<br>')}</div>
+            <div class="card-actions">
+              <button class="btn-mini" onclick="speakCurrentText('sop-text-${currentPhase}-${index}')">🔊 發音</button>
+              <button class="btn-mini primary" onclick="showBigTextById('sop-text-${currentPhase}-${index}')">📱 大字展示</button>
+            </div>
+          </div>
+        `;
+        container.innerHTML += cardHtml;
+      });
+    }
+
+    // 更新規章翻譯文字
+    function renderPolicies() {
+      document.getElementById('policy-bday-text').innerText = policyData.bday[currentLang];
+      document.getElementById('policy-bowl-text').innerText = policyData.bowl[currentLang];
+      document.getElementById('policy-wash-text').innerText = policyData.wash[currentLang];
+      document.getElementById('policy-time-text').innerText = policyData.time[currentLang];
+      document.getElementById('map-container-guide-text').innerText = policyData.bowl[currentLang];
+    }
+
+    // 切換語系
+    function setLang(lang, btnElem) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      btnElem.classList.add('active');
+      document.getElementById('aiTag').innerText = `✨ AI 口譯建議 (Target: ${langVoiceMap[lang].label})`;
+
+      renderSOPCards();
+      renderPolicies();
+      renderCurrentScenarioSpeech();
+    }
+
+    // 快捷 AI Scenario 切換
+    function selectScenario(key) {
+      currentScenarioKey = key;
+      document.querySelectorAll('.chip-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('chip-' + key).classList.add('active');
+
+      const data = multiLangData[key];
+      document.getElementById('zhSummary').innerText = data.summary;
+      renderCurrentScenarioSpeech();
+    }
+
+    function renderCurrentScenarioSpeech() {
+      if (currentScenarioKey && multiLangData[currentScenarioKey]) {
+        const data = multiLangData[currentScenarioKey];
+        if (data.speech[currentLang]) {
+          document.getElementById('targetSpeech').innerText = `"${data.speech[currentLang]}"`;
+        }
+      }
+    }
+
+    // 發音 TTS
+    function speakCurrentText(elementId) {
+      const elem = document.getElementById(elementId);
+      if (!elem) return;
+      const text = elem.innerText.replace(/^"|"$/g, '');
+      
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = langVoiceMap[currentLang].code;
+      utterance.rate = 0.92;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // 複製話術
+    function copyCurrentText(elementId) {
+      const elem = document.getElementById(elementId);
+      if (!elem) return;
+      navigator.clipboard.writeText(elem.innerText).then(() => {
+        alert(`已複製 [${langVoiceMap[currentLang].label}] 話術至剪貼簿！`);
+      });
+    }
+
+    // 大字展示 (Flip to Guest)
+    function showBigTextById(elementId) {
+      const elem = document.getElementById(elementId);
+      if (!elem) return;
+      document.getElementById('bigTextContent').innerText = elem.innerText.replace(/^"|"$/g, '');
+      document.getElementById('bigTextModal').classList.add('active');
+    }
+
+    function closeBigText() {
+      document.getElementById('bigTextModal').classList.remove('active');
+    }
+
+    // 即時傳送輸入翻譯
+    function sendInput() {
+      const inputVal = document.getElementById('userInput').value.trim();
+      if (!inputVal) return;
+
+      document.getElementById('zhSummary').innerText = `💡 直譯模式：將店員輸入轉換為 ${langVoiceMap[currentLang].label}。`;
+      document.getElementById('targetSpeech').innerText = `"${inputVal}"`;
+      document.getElementById('userInput').value = '';
+
+      switchNavTab('ai', document.querySelectorAll('.nav-tab-btn')[1]);
+    }
+
+    // 語音輸入辨識
+    let isRecognizing = false;
+    let recognition = null;
+    function toggleMic() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("您的瀏覽器不支援語音辨識，請使用 Chrome 或 Safari 瀏覽器！");
+        return;
+      }
+      const micBtn = document.getElementById('micBtn');
+      if (isRecognizing && recognition) {
+        recognition.stop();
+        return;
+      }
+      recognition = new SpeechRecognition();
+      recognition.lang = 'zh-TW';
+      recognition.interimResults = false;
+
+      recognition.onstart = function() {
+        isRecognizing = true;
+        micBtn.classList.add('recording');
+        document.getElementById('userInput').placeholder = "正在聆聽中文，請說話...";
+      };
+      recognition.onresult = function(event) {
+        if (event.results && event.results && event.results) {
+          document.getElementById('userInput').value = event.results.transcript;
+          sendInput();
+        }
+      };
+      recognition.onerror = function() { alert("未接收到語音，請重試！"); };
+      recognition.onend = function() {
+        isRecognizing = false;
+        micBtn.classList.remove('recording');
+        document.getElementById('userInput').placeholder = "輸入中文提問或需求，AI 即時口譯...";
+      };
+      recognition.start();
+    }
+
+    // 初始化
+    renderSOPCards();
+    renderPolicies();
+  </script>
+</body>
+</html>
