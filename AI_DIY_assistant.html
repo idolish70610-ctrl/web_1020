@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>自己做 DIY Baking - 全功能 AI 門市隨身口譯助理 (整合旗艦版)</title>
+  <title>自己做 DIY Baking - 全功能 AI 門市隨身口譯助理 (完全修復版)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -339,6 +339,7 @@
       font-weight: 700;
       color: #2b231d;
       line-height: 1.45;
+      white-space: pre-line;
     }
 
     /* 底部輸入列 */
@@ -460,10 +461,10 @@
 
     <!-- 主選單 Tab 導引列 -->
     <div class="main-nav-tabs">
-      <button class="nav-tab-btn active" onclick="switchNavTab('sops', this)">📋 9步驟 SOP</button>
-      <button class="nav-tab-btn" onclick="switchNavTab('flow', this)">📱 流程與規章</button>
-      <button class="nav-tab-btn" onclick="switchNavTab('map', this)">🗺️ 門市導覽</button>
-      <button class="nav-tab-btn" onclick="switchNavTab('ai', this)">💬 AI 即時對話</button>
+      <button class="nav-tab-btn active" id="tab-sops" onclick="switchNavTab('sops', this)">📋 9步驟 SOP</button>
+      <button class="nav-tab-btn" id="tab-flow" onclick="switchNavTab('flow', this)">📱 流程與規章</button>
+      <button class="nav-tab-btn" id="tab-map" onclick="switchNavTab('map', this)">🗺️ 門市導覽</button>
+      <button class="nav-tab-btn" id="tab-ai" onclick="switchNavTab('ai', this)">💬 AI 即時對話</button>
     </div>
 
     <!-- 內容滾動視窗 -->
@@ -621,7 +622,7 @@
         <div class="ai-card">
           <div class="ai-header">
             <div class="ai-tag" id="aiTag">✨ AI 口譯建議 (Target: English)</div>
-            <div style="font-size:10px; color:#a39688; font-weight:700;">即時雙向轉換</div>
+            <div style="font-size:10px; color:#a39688; font-weight:700;">智慧 3 層資料庫檢索</div>
           </div>
           <div class="zh-summary" id="zhSummary">💡 說明重點：熱情祝賀壽星，並說明陪伴者需選擇製作品項或付陪伴費以維護門市體驗品質。</div>
           <div class="speech-box">
@@ -642,7 +643,7 @@
     <!-- 底部即時輸入列 (固定在底端) -->
     <div class="input-bar">
       <button class="mic-btn" id="micBtn" onclick="toggleMic()" title="點擊語音輸入">🎙️</button>
-      <input type="text" id="userInput" class="text-input" placeholder="輸入中文提問或需求，AI 即時口譯...">
+      <input type="text" id="userInput" class="text-input" placeholder="輸入品項(剪刀/scissors)或問題..." onkeypress="if(event.key==='Enter') sendInput();">
       <button class="send-btn" onclick="sendInput()" title="傳送">⚡</button>
     </div>
 
@@ -661,13 +662,102 @@
     let currentScenarioKey = 'birthday';
 
     const langVoiceMap = {
-      en: { code: 'en-US', label: 'English', gtxCode: 'en' },
-      jp: { code: 'ja-JP', label: '日本語', gtxCode: 'ja' },
-      kr: { code: 'ko-KR', label: '한국어', gtxCode: 'ko' },
-      vn: { code: 'vi-VN', label: 'Tiếng Việt', gtxCode: 'vi' }
+      en: { code: 'en-US', label: 'English' },
+      jp: { code: 'ja-JP', label: '日本語' },
+      kr: { code: 'ko-KR', label: '한국어' },
+      vn: { code: 'vi-VN', label: 'Tiếng Việt' }
     };
 
-    // 9 步驟 SOP 資料庫 (對接門市實務)
+    // 1. 門市實體品項與位置精華資料庫 (storeItemDB)
+    const storeItemDB = [
+      { 
+        keywords: ["剪刀", "scissors", "scissor", "cut"], 
+        name: "✂️ 剪刀 (Baking Scissors)", 
+        locZh: "洞洞牆區 A2 掛勾", 
+        locEn: "Pegboard Area - Hook A2",
+        desc: "用於剪開粉類包裝袋、烤盤紙或果醬袋。"
+      },
+      { 
+        keywords: ["方模", "模具", "方模具", "mold", "molds", "square"], 
+        name: "📦 【D區】方模 (Square Mold 6/8 inch)", 
+        locZh: "模具區 D 層架 2 號位置", 
+        locEn: "Molds Station - Shelf D (#2)",
+        desc: "金屬四方型模具，用於戚風蛋糕或布朗尼定型。"
+      },
+      { 
+        keywords: ["烤盤紙", "烘焙紙", "paper", "baking paper", "parchment"], 
+        name: "📄 【A區】烤盤紙 (Baking Paper)", 
+        locZh: "模具區 A 層架 抽屜內", 
+        locEn: "Molds Station - Drawer A",
+        desc: "白色耐熱烘焙紙，鋪於模具底部防粘黏。"
+      },
+      { 
+        keywords: ["手粉", "低筋", "flour", "dusting"], 
+        name: "🥣 手粉 (Dusting Flour)", 
+        locZh: "檯面 B 區 (小透明罐)", 
+        locEn: "Countertop Section B (Transparent Jar)",
+        desc: "防粘黏低筋麵粉，桌上隨手可取。"
+      },
+      { 
+        keywords: ["工作盆", "鋼盆", "mixing bowl", "bowl", "bowls"], 
+        name: "🥣 工作盆 (Stainless Steel Mixing Bowl)", 
+        locZh: "器材區 B1 (洗手台旁)", 
+        locEn: "Equipment Area B1 (Next to Sinks)",
+        desc: "銀色不鏽鋼大金屬盆，堆疊放置。"
+      },
+      { 
+        keywords: ["黃色圓盒", "黃盒", "yellow box", "yellow"], 
+        name: "🟡 黃色圓盒 (#1 Yellow Box)", 
+        locZh: "冰箱冷藏區 A 區", 
+        locEn: "Refrigerator Section A",
+        desc: "黃色圓形塑膠盒，盒蓋貼有 1 號標籤。"
+      },
+      { 
+        keywords: ["壓模", "月餅", "蛋黃酥", "mooncake", "press"], 
+        name: "🥮 蛋黃酥壓模 (Mooncake Mold)", 
+        locZh: "期間限定專區 C3", 
+        locEn: "Seasonal Section C3",
+        desc: "中秋/萬聖限定塑膠壓模。"
+      }
+    ];
+
+    // 2. 門市規章與 FAQ 資料庫 (storePolicyDB - 確保變數名稱一致！)
+    const storePolicyDB = {
+      bday: {
+        keywords: ["壽星", "生日", "陪伴", "陪伴費", "149", "birthday", "bday", "companion", "friend", "accompany"],
+        title: "🎂 壽星優惠與 $149 陪伴費規定",
+        en: "Happy Birthday! 🎉 Birthday stars get a free cake! Companions need to pick a dessert or pay a NT\$149 companion fee so everyone has a seat!",
+        jp: "お誕生日おめでとうございます！🎂 主役の方はケーキ1個無料！お席確保のため、ご同伴者様はスイーツ1品選択か同伴料（149元）を頂戴しております。",
+        kr: "생일 축하합니다! 🎉 생일자는 케이크 1개 무료! 좌석 확보를 위해 동반인은 디저트 1개 선택 또는 동반료(NT\$149) 결제가 필요합니다.",
+        vn: "Chúc mừng sinh nhật! 🎉 Người có sinh nhật được tặng 1 bánh miễn phí! Để có chỗ ngồi, người đi cùng cần chọn 1 món bánh hoặc trả phí đi cùng (149 TWD)."
+      },
+      bowl: {
+        keywords: ["碗", "容器", "塑膠", "瓷碗", "微波", "bowl", "bowls", "container", "plastic", "ceramic", "microwave"],
+        title: "🥣 容器使用鐵律 (一個碗裝一種)",
+        en: "1 bowl per ingredient!\n🟢 Plastic Bowl = Dry & Cold items (No microwave!)\n⚪ Ceramic Bowl = Butter & Microwavable liquids.",
+        jp: "1つのボウルに1つの材料！\n🟢 プラスチック = 粉類・冷藏（レンジ不可）\n⚪ 陶器ボウル = バター・加熱用（レンジ可）",
+        kr: "1개 볼에 1개 재료만!\n🟢 플라스틱 볼 = 가루/냉장 (전자레인지 불가!)\n⚪ 도자기 볼 = 버터/액체 (전자레인지 가능)",
+        vn: "1 bát chứa 1 nguyên liệu!\n🟢 Bát nhựa = Bột & Đồ lạnh (Không quay vi sóng!)\n⚪ Bát sứ = Bơ & Chất lỏng quay vi sóng."
+      },
+      wash: {
+        keywords: ["洗碗", "清洗", "洗滌", "外帶", "內用", "wash", "washing", "clean", "cleaning", "sink", "sinks", "takeaway", "dine"],
+        title: "🧽 全自助器皿清洗與僅供外帶",
+        en: "We are a self-service studio! Please wash and return all tools after baking. Cakes are for takeaway only (no dine-in).",
+        jp: "完全セルフサービスです。使用後の道具は洗って元の場所へお戻しください。ケーキはお持ち帰りのみ（店内飲食不可）となります。",
+        kr: "셀프 스튜디오입니다! 사용하신 도구는 직접 설거지 후 제자리에 놓아주세요. 케이크는 포장만 가능합니다 (매장 취식 불가).",
+        vn: "Mô hình tự phục vụ! Vui lòng tự rửa và cất dụng cụ sau khi làm xong. Bánh chỉ mang về (không ăn tại cửa hàng)."
+      },
+      time: {
+        keywords: ["時間", "預約", "遲到", "保留", "2小時", "time", "duration", "reservation", "late", "reserve", "hold"],
+        title: "⏱️ 預約保留 10 分鐘與體驗時間",
+        en: "Reservations are held for 10 minutes. DIY session is 2 hours. Please enjoy your baking experience!",
+        jp: "ご予約は10分間保持されます。体験時間は2時間です。どうぞお楽しみください！",
+        kr: "예약은 10분간 유지됩니다. 이용 시간은 2시간입니다. 즐거운時間 되세요!",
+        vn: "Đặt chỗ được giữ trong 10 phút. Thời gian làm bánh là 2 tiếng. Chúc bạn vui vẻ!"
+      }
+    };
+
+    // 3. 9 步驟 SOP 資料庫
     const sopDatabase = {
       1: [
         {
@@ -757,43 +847,13 @@
       ]
     };
 
-    // 4 大門市規章多國語言資料庫
-    const policyData = {
-      bday: {
-        en: "Happy Birthday! 🎉 Birthday stars get a free cake! Companions need to pick a dessert or pay a NT\$149 companion fee so everyone has a seat!",
-        jp: "お誕生日おめでとうございます！🎂 主役の方はケーキ1個無料！お席確保のため、ご同伴者様はスイーツ1品選択か同伴料（149元）を頂戴しております。",
-        kr: "생일 축하합니다! 🎉 생일자는 케이크 1개 무료! 좌석 확보를 위해 동반인은 디저트 1개 선택 또는 동반료(NT\$149) 결제가 필요합니다.",
-        vn: "Chúc mừng sinh nhật! 🎉 Người có sinh nhật được tặng 1 bánh miễn phí! Để có chỗ ngồi, người đi cùng cần chọn 1 món bánh hoặc trả phí đi cùng (149 TWD)."
-      },
-      bowl: {
-        en: "1 bowl per ingredient!\n🟢 Plastic Bowl = Dry & Cold items (No microwave!)\n⚪ Ceramic Bowl = Butter & Microwavable liquids.",
-        jp: "1つのボウルに1つの材料！\n🟢 プラスチック = 粉類・冷藏（レンジ不可）\n⚪ 陶器ボウル = バター・加熱用（レンジ可）",
-        kr: "1개 볼에 1개 재료만!\n🟢 플라스틱 볼 = 가루/냉장 (전자레인지 불가!)\n⚪ 도자기 볼 = 버터/액체 (전자레인지 가능)",
-        vn: "1 bát chứa 1 nguyên liệu!\n🟢 Bát nhựa = Bột & Đồ lạnh (Không quay vi sóng!)\n⚪ Bát sứ = Bơ & Chất lỏng quay vi sóng."
-      },
-      wash: {
-        en: "We are a self-service studio! Please wash and return all tools after baking. Cakes are for takeaway only (no dine-in).",
-        jp: "完全セルフサービスです。使用後の道具は洗って元の場所へお戻しください。ケーキはお持ち帰りのみ（店内飲食不可）となります。",
-        kr: "셀프 스튜디오입니다! 사용하신 도구는 직접 설거지 후 제자리에 놓아주세요. 케이크는 포장만 가능합니다 (매장 취식 불가).",
-        vn: "Mô hình tự phục vụ! Vui lòng tự rửa và cất dụng cụ sau khi làm xong. Bánh chỉ mang về (không ăn tại cửa hàng)."
-      },
-      time: {
-        en: "Reservations are held for 10 minutes. DIY session is 2 hours. Please enjoy your baking experience!",
-        jp: "ご予約は10分間保持されます。体験時間は2時間です。どうぞお楽しみください！",
-        kr: "예약은 10분간 유지됩니다. 이용 시간은 2시간입니다. 즐거운 시간 되세요!",
-        vn: "Đặt chỗ được giữ trong 10 phút. Thời gian làm bánh là 2 tiếng. Chúc bạn vui vẻ!"
-      }
-    };
-
-    // AI 對話模式範例資料庫
+    // AI 對話預設範例
     const multiLangData = {
       birthday: {
-        inquiry: "「顧客是壽星，問說為什麼朋友一定要再點一個品項，不能只陪他做蛋糕？」",
         summary: "💡 說明重點：熱情祝賀壽星，並說明陪伴者需選擇製作品項或付陪伴費以維護門市體驗品質。",
-        speech: policyData.bday
+        speech: storePolicyDB.bday
       },
       allergen: {
-        inquiry: "「外籍顧客詢問這款月餅/蛋糕是否含有花生、堅果或蛋奶成分？」",
         summary: "💡 說明重點：確認無堅果/花生成分，但含有麩質與蛋奶，並提供原料標示卡。",
         speech: {
           en: "This recipe is 100% peanut and tree-nut free! However, it contains dairy, eggs, and gluten. Please let us know if you have any severe allergies!",
@@ -803,7 +863,6 @@
         }
       },
       location: {
-        inquiry: "「顧客找不到剪刀與方模具在哪裡？」",
         summary: "💡 說明重點：引導至洞洞牆區 A2 與模具區 D 層架。",
         speech: {
           en: "The scissors are on the Pegboard Wall (Hook A2), and the Square Molds are located at Molds Station (Shelf D). I can walk you there!",
@@ -813,24 +872,74 @@
         }
       },
       wash: {
-        inquiry: "「外籍顧客詢問用過的器具要放哪裡洗滌？」",
         summary: "💡 說明重點：說明自助洗滌區位置，並提示提供溫水與烘乾設備。",
-        speech: {
-          en: "Please bring used bowls and tools to our Self-Washing Area. We provide warm water, dish soap, and drying racks for your convenience!",
-          jp: "ご使用済みのボウルや道具はセルフ洗面エリアへお持ちください。温水、洗剤、乾燥ラックをご用意しております！",
-          kr: "사용하신 용기와 도구는 셀프 세척 구역으로 가져가 주시면 됩니다. 따뜻한 물, 세제, 건조대가 준비되어 있습니다!",
-          vn: "Vui lòng mang bát và dụng cụ đã sử dụng đến Khu Vực Tự Rửa. Chúng tôi có sẵn nước ấm, nước rửa bát và giá sấy khô!"
-        }
+        speech: storePolicyDB.wash
       }
     };
+
+    // 🚀 核心智慧 3 層檢索與對應函式 (已被完全修復，絕不中斷)
+    function sendInput() {
+      const inputElem = document.getElementById('userInput');
+      const inputVal = inputElem.value.trim();
+      if (!inputVal) return;
+
+      const lowerInput = inputVal.toLowerCase();
+      let matchedResponse = null;
+      let summaryText = "";
+
+      try {
+        // A. 第一層：檢索門市品項 (storeItemDB)
+        for (let item of storeItemDB) {
+          if (item.keywords && item.keywords.some(kw => lowerInput.includes(kw))) {
+            matchedResponse = `📍 【${item.name}】\n• Location (中文): ${item.locZh}\n• Location (English): ${item.locEn}\n💡 Note: ${item.desc}`;
+            summaryText = `💡 Item Location Found: 【${item.name}】`;
+            break;
+          }
+        }
+
+        // B. 第二層：檢索門市規章 (storePolicyDB - 變數名稱已完美對齊)
+        if (!matchedResponse) {
+          for (let key in storePolicyDB) {
+            const policy = storePolicyDB[key];
+            if (policy.keywords && policy.keywords.some(kw => lowerInput.includes(kw))) {
+              matchedResponse = policy[currentLang] || policy.en || policy.title;
+              summaryText = `💡 Policy Answer: ${policy.title}`;
+              break;
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Match error:", err);
+      }
+
+      // C. 第三層：不在資料庫內（或找不到匹配）的親切兜底回覆
+      if (!matchedResponse) {
+        matchedResponse = "目前 AI 隨身助理無法處理此問題，請尋求現場門市夥伴（家事小精靈）協助！\n\n(Currently unable to process this request. Please ask our store staff for assistance.)";
+        summaryText = "⚠️ 系統提示：該問題非門市常規資料，已引導尋求現場店員協助。";
+      }
+
+      // 渲染至畫面
+      document.getElementById('zhSummary').innerText = summaryText;
+      document.getElementById('targetSpeech').innerText = matchedResponse;
+      inputElem.value = '';
+
+      // 自動切換到 AI 對話分頁 (安全切換)
+      switchNavTab('ai', document.getElementById('tab-ai'));
+    }
 
     // TAB 頁面切換
     function switchNavTab(paneId, btnElem) {
       document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
-      btnElem.classList.add('active');
+      if (btnElem && btnElem.classList) {
+        btnElem.classList.add('active');
+      } else {
+        const targetBtn = document.getElementById('tab-' + paneId);
+        if (targetBtn) targetBtn.classList.add('active');
+      }
 
       document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
-      document.getElementById('pane-' + paneId).classList.add('active');
+      const targetPane = document.getElementById('pane-' + paneId);
+      if (targetPane) targetPane.classList.add('active');
     }
 
     // SOP 階段切換
@@ -866,11 +975,11 @@
 
     // 更新規章翻譯文字
     function renderPolicies() {
-      document.getElementById('policy-bday-text').innerText = policyData.bday[currentLang];
-      document.getElementById('policy-bowl-text').innerText = policyData.bowl[currentLang];
-      document.getElementById('policy-wash-text').innerText = policyData.wash[currentLang];
-      document.getElementById('policy-time-text').innerText = policyData.time[currentLang];
-      document.getElementById('map-container-guide-text').innerText = policyData.bowl[currentLang];
+      document.getElementById('policy-bday-text').innerText = storePolicyDB.bday[currentLang];
+      document.getElementById('policy-bowl-text').innerText = storePolicyDB.bowl[currentLang];
+      document.getElementById('policy-wash-text').innerText = storePolicyDB.wash[currentLang];
+      document.getElementById('policy-time-text').innerText = storePolicyDB.time[currentLang];
+      document.getElementById('map-container-guide-text').innerText = storePolicyDB.bowl[currentLang];
     }
 
     // 切換語系
@@ -885,7 +994,7 @@
       renderCurrentScenarioSpeech();
     }
 
-    // 快捷 AI Scenario 切換
+    // 快捷 Scenario 切換
     function selectScenario(key) {
       currentScenarioKey = key;
       document.querySelectorAll('.chip-btn').forEach(btn => btn.classList.remove('active'));
@@ -899,8 +1008,9 @@
     function renderCurrentScenarioSpeech() {
       if (currentScenarioKey && multiLangData[currentScenarioKey]) {
         const data = multiLangData[currentScenarioKey];
-        if (data.speech[currentLang]) {
-          document.getElementById('targetSpeech').innerText = `"${data.speech[currentLang]}"`;
+        if (data.speech) {
+          const speechText = typeof data.speech === 'string' ? data.speech : (data.speech[currentLang] || data.speech.en);
+          document.getElementById('targetSpeech').innerText = speechText;
         }
       }
     }
@@ -939,18 +1049,6 @@
       document.getElementById('bigTextModal').classList.remove('active');
     }
 
-    // 即時傳送輸入翻譯
-    function sendInput() {
-      const inputVal = document.getElementById('userInput').value.trim();
-      if (!inputVal) return;
-
-      document.getElementById('zhSummary').innerText = `💡 直譯模式：將店員輸入轉換為 ${langVoiceMap[currentLang].label}。`;
-      document.getElementById('targetSpeech').innerText = `"${inputVal}"`;
-      document.getElementById('userInput').value = '';
-
-      switchNavTab('ai', document.querySelectorAll('.nav-tab-btn')[1]);
-    }
-
     // 語音輸入辨識
     let isRecognizing = false;
     let recognition = null;
@@ -972,7 +1070,7 @@
       recognition.onstart = function() {
         isRecognizing = true;
         micBtn.classList.add('recording');
-        document.getElementById('userInput').placeholder = "正在聆聽中文，請說話...";
+        document.getElementById('userInput').placeholder = "正在聆聽，請說話...";
       };
       recognition.onresult = function(event) {
         if (event.results && event.results && event.results) {
@@ -984,12 +1082,12 @@
       recognition.onend = function() {
         isRecognizing = false;
         micBtn.classList.remove('recording');
-        document.getElementById('userInput').placeholder = "輸入中文提問或需求，AI 即時口譯...";
+        document.getElementById('userInput').placeholder = "輸入品項(剪刀/scissors)或問題...";
       };
       recognition.start();
     }
 
-    // 初始化
+    // 初始化載入
     renderSOPCards();
     renderPolicies();
   </script>
