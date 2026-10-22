@@ -35,7 +35,6 @@
       border: 1.5px solid #eae3d9;
     }
 
-    /* 頂部 Header & 多國語言列 */
     .app-header {
       background: #f7f3ec;
       padding: 18px 16px 12px 16px;
@@ -89,7 +88,6 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
 
-    /* 主選單 Tab 導引列 */
     .main-nav-tabs {
       display: flex;
       background: #efe8dd;
@@ -113,7 +111,6 @@
       border-bottom: 3px solid #d96b43;
     }
 
-    /* 內容可滾動區域 */
     .view-container {
       flex: 1;
       padding: 12px;
@@ -140,7 +137,6 @@
       justify-content: space-between;
     }
 
-    /* 1. SOP 與親切話術卡片樣式 */
     .phase-sub-tabs {
       display: flex;
       gap: 5px;
@@ -217,7 +213,6 @@
       border-color: #d96b43;
     }
 
-    /* 2. 門市地圖與分區卡片 */
     .map-box {
       background: #ffffff;
       border: 1.5px solid #f0e6da;
@@ -240,7 +235,6 @@
     .zone-card-title { font-size: 12px; font-weight: 800; color: #2b231d; }
     .zone-card-en { font-size: 10px; color: #738240; font-weight: 700; margin-top: 2px; }
 
-    /* 3. 對話歷史紀錄流 (Chat Thread Stream) */
     .chat-thread {
       display: flex;
       flex-direction: column;
@@ -294,7 +288,6 @@
       border-top: 1px dashed #e3d7c5;
     }
 
-    /* 底部輸入列 */
     .input-bar {
       background: #ffffff;
       padding: 10px 14px 16px 14px;
@@ -319,7 +312,6 @@
       display: flex; align-items: center; justify-content: center;
     }
 
-    /* 📱 滿版大字 Modal (Flip to Guest) */
     .fullscreen-modal {
       display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: #111111; color: #ffffff; z-index: 2000; padding: 30px 20px 24px 20px;
@@ -340,7 +332,6 @@
 
   <div class="mobile-app-container">
     
-    <!-- 頂部 Header & 多國語言列 -->
     <div class="app-header">
       <div>
         <span class="brand-badge">自己做 DIY BAKING</span>
@@ -354,7 +345,6 @@
       </div>
     </div>
 
-    <!-- 主選單 Tab -->
     <div class="main-nav-tabs">
       <button class="nav-tab-btn active" id="tab-ai" onclick="switchNavTab('ai', this)">💬 即時對話歷程</button>
       <button class="nav-tab-btn" id="tab-sops" onclick="switchNavTab('sops', this)">📋 接待 SOP</button>
@@ -362,19 +352,14 @@
       <button class="nav-tab-btn" id="tab-map" onclick="switchNavTab('map', this)">🗺️ 區域與親切引導</button>
     </div>
 
-    <!-- 內容區 -->
     <div class="view-container">
       
-      <!-- PANE 1: 💬 店員雙向對話紀錄流 (Chat Thread Log) -->
       <div class="view-pane active" id="pane-ai">
         <div class="section-title">
           <span>💬 店員對話歷程 (Staff Diagnostic Log)</span>
         </div>
         
-        <!-- 滾動對話框 -->
         <div class="chat-thread" id="chatThread">
-          
-          <!-- 預設訊息 1: 顧客詢問 -->
           <div class="chat-bubble guest">
             <span class="bubble-sender">👤 外籍顧客 (Guest Input)</span>
             <div class="bubble-content">
@@ -383,7 +368,6 @@
             </div>
           </div>
 
-          <!-- 預設訊息 2: AI 智慧解析與建議回覆 -->
           <div class="chat-bubble staff">
             <span class="bubble-sender">🤖 AI 建議回覆 (Staff Action)</span>
             <div class="bubble-content">
@@ -397,23 +381,18 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
 
-      <!-- PANE 2: 📋 門市 9 步驟接待 SOP -->
       <div class="view-pane" id="pane-sops">
         <div class="phase-sub-tabs">
           <button class="phase-sub-btn active" onclick="switchPhase(1, this)">1. 迎賓報到結帳</button>
           <button class="phase-sub-btn" onclick="switchPhase(2, this)">2. 會員與集點</button>
           <button class="phase-sub-btn" onclick="switchPhase(3, this)">3. 導覽與製作</button>
         </div>
-        <div id="sopCardList" style="display: flex; flex-direction: column; gap: 10px;">
-          <!-- 動態載入 SOP 卡片 -->
-        </div>
+        <div id="sopCardList" style="display: flex; flex-direction: column; gap: 10px;"></div>
       </div>
 
-      <!-- PANE 3: 📜 門市 4 大規章一鍵解說卡 -->
       <div class="view-pane" id="pane-flow">
         <div class="section-title">
           <span>📜 門市 4 大規章一鍵解說卡</span>
@@ -460,7 +439,6 @@
         </div>
       </div>
 
-      <!-- PANE 4: 🗺️ 門市 4 大區域導覽與親切互動話術 (含帶路、讚美拍照與社群Tag) -->
       <div class="view-pane" id="pane-map">
         <div class="section-title">
           <span>🗺️ 門市 4 大區域多國語言指引</span>
@@ -495,7 +473,6 @@
           <span>💬 引導顧客一鍵親切話術 (Friendly Interactions)</span>
         </div>
 
-        <!-- 親切話術 1：帶路指引 -->
         <div class="sop-card">
           <span class="sop-badge">請跟我來 Follow Me</span>
           <div class="sop-title-zh">🚶‍♂️ 帶路引導親切話術</div>
@@ -506,7 +483,6 @@
           </div>
         </div>
 
-        <!-- 親切話術 2：成品讚美與主動拍照 -->
         <div class="sop-card">
           <span class="sop-badge">熱情讚美 Photo Service</span>
           <div class="sop-title-zh">🎂 成品熱情讚美與主動拍照</div>
@@ -517,7 +493,6 @@
           </div>
         </div>
 
-        <!-- 親切話術 3：社群標籤一鍵複製與展示 -->
         <div class="sop-card">
           <span class="sop-badge">社群分享 Social Tag</span>
           <div class="sop-title-zh">📸 社群標籤一鍵複製 (IG / TikTok)</div>
@@ -533,14 +508,12 @@
 
     </div>
 
-    <!-- 底部即時輸入列 (固定在底端) -->
     <div class="input-bar">
       <button class="mic-btn" id="micBtn" onclick="toggleMic()" title="點擊語音輸入">🎙️</button>
       <input type="text" id="userInput" class="text-input" placeholder="輸入顧客問題(如scissors)或中文需求..." onkeypress="if(event.key==='Enter') sendInput();">
       <button class="send-btn" onclick="sendInput()" title="傳送">⚡</button>
     </div>
 
-    <!-- 📱 滿版大字 Modal (Flip to Guest) -->
     <div class="fullscreen-modal" id="bigTextModal">
       <div class="modal-tag">📱 請將螢幕轉向外籍顧客觀看 (FLIP TO GUEST)</div>
       <div class="big-text" id="bigTextContent">-</div>
@@ -560,7 +533,6 @@
       vn: { code: 'vi-VN', label: 'Tiếng Việt' }
     };
 
-    // 1. 門市實體品項與位置資料庫
     const storeItemDB = [
       { keywords: ["剪刀", "scissors", "scissor", "cut"], name: "✂️ 剪刀 (Baking Scissors)", locZh: "洞洞牆區 A2 掛勾", locEn: "Pegboard Area - Hook A2" },
       { keywords: ["方模", "模具", "方模具", "mold", "molds", "square"], name: "📦 【D區】方模 (Square Mold 6/8 inch)", locZh: "模具區 D 層架 2 號位置", locEn: "Molds Station - Shelf D (#2)" },
@@ -570,7 +542,6 @@
       { keywords: ["黃色圓盒", "黃盒", "yellow box", "yellow"], name: "🟡 黃色圓盒 (#1 Yellow Box)", locZh: "冰箱冷藏區 A 區", locEn: "Refrigerator Section A" }
     ];
 
-    // 2. 門市規章 FAQ 資料庫
     const storePolicyDB = {
       bday: {
         keywords: ["壽星", "生日", "陪伴", "陪伴費", "149", "birthday", "bday", "companion", "friend"],
@@ -601,12 +572,11 @@
         title: "⏱️ 預約保留 10 分鐘與體驗時間",
         en: "Reservations are held for 10 minutes. DIY session is 2 hours. Please enjoy your baking experience!",
         jp: "ご予約は10分間保持されます。体験時間は2時間です。どうぞお楽しみください！",
-        kr: "예약은 10분간 유지されます。이용 시간은 2시간입니다. 즐거운時間 되세요!",
+        kr: "예약은 10분간 유지されます。이용 시간은 2시간입니다. 즐거운 시간 되세요!",
         vn: "Đặt chỗ được giữ trong 10 phút. Thời gian làm bánh là 2 tiếng. Chúc bạn vui vẻ!"
       }
     };
 
-    // 3. 親切引導與社群話術資料庫 (動態切換 4 語)
     const interactionData = {
       follow: {
         en: '"Please follow me! I\'ll walk you to the station. ✂️"',
@@ -630,7 +600,20 @@
 
     const rawHashtags = "#自己做烘焙聚樂部 #DIYBakingClub #TaipeiBaking #CakeDecorating @mydiybc";
 
-    // 4. 多國門市 4 大區域名稱資料庫
+    const itemFollowSpeech = {
+      en: { text: "It's located at", follow: "Please follow me!" },
+      jp: { text: "場所はこちらです：", follow: "どうぞ私についてきてください！" },
+      kr: { text: "위치는 다음과 같습니다:", follow: "저를 따라오세요!" },
+      vn: { text: "Vị trí ở khu vực:", follow: "Xin đi theo tôi!" }
+    };
+
+    const fallbackMap = {
+      en: "Currently unable to process this request. Please ask our store staff (Baking Elf) for assistance!\n\n(目前 AI 隨身助理無法處理此問題，請尋求現場門市夥伴協助！)",
+      jp: "現在AIアシスタントでは処理できません。現場のスタッフ（お手伝い妖精）にお尋ねください！\n\n(目前 AI 隨身助理無法處理此問題，請尋求現場門市夥伴協助！)",
+      kr: "현재 AI 보조가 처리할 수 없습니다. 매장 직원(도우미)에게 문의해 주세요!\n\n(目前 AI 隨身助理無法處理此問題，請尋求現場門市夥伴協助！)",
+      vn: "Hiện tại trợ lý AI không thể xử lý. Vui lòng nhờ nhân viên cửa hàng hỗ trợ!\n\n(目前 AI 隨身助理無法處理此問題，請尋求現場門市夥伴協助！)"
+    };
+
     const mapZoneData = {
       en: { midTitle: "中間左右區", midDesc: "Ingredients Area (Pegboard)", winTitle: "靠窗區", winDesc: "Mixing Station", ovenTitle: "取料區後面", ovenDesc: "Decor & Ovens", washTitle: "再往後走", washDesc: "Washing Sinks" },
       jp: { midTitle: "中間左右區", midDesc: "材料エリア (有孔ボード)", winTitle: "靠窗區", winDesc: "ミキサーエリア", ovenTitle: "取料區後面", ovenDesc: "オーブン・装飾", washTitle: "再往後走", washDesc: "洗い場" },
@@ -638,7 +621,6 @@
       vn: { midTitle: "中間左右區", midDesc: "Khu Nguyên Liệu (Tường lỗ)", winTitle: "靠窗區", winDesc: "Khu Đánh Bột", ovenTitle: "取料區後面", ovenDesc: "Lò Nướng & Trang Trí", washTitle: "再往後走", washDesc: "Khu Rửa" }
     };
 
-    // 5. 9 步驟 SOP 資料庫
     const sopDatabase = {
       1: [
         { num: "Step 1", zh: "1. 招呼與詢問預約", en: "Welcome to DIY Baking Club! Do you have a reservation?", jp: "いらっしゃいませ！ご予約はございますか？", kr: "안녕하세요! 예약하셨나요?", vn: "Chào mừng bạn đến với DIY Baking Club! Bạn có đặt chỗ trước không?" },
@@ -658,7 +640,6 @@
       ]
     };
 
-    // 🚀 核心：動態新增對話訊息至 Chat Thread 流
     function sendInput() {
       const inputElem = document.getElementById('userInput');
       const inputVal = inputElem.value.trim();
@@ -667,30 +648,27 @@
       const lowerInput = inputVal.toLowerCase();
       const threadContainer = document.getElementById('chatThread');
 
-      // 1. 新增顧客對話泡泡
       let guestBubbleHtml = `
         <div class="chat-bubble guest">
-          <span class="bubble-sender">👤 顧客發問 / 店員輸入</span>
+          <span class="bubble-sender">👤 顧客發問 / 店員輸入 (${langVoiceMap[currentLang].label})</span>
           <div class="bubble-content">
             <div class="bubble-text-msg">${escapeHtml(inputVal)}</div>
-            <div class="zh-translation">💡 即時對照：正在由 AI 解析對應問題...</div>
+            <div class="zh-translation">💡 即時解析：已切換至 [${langVoiceMap[currentLang].label}] 回覆</div>
           </div>
         </div>
       `;
       threadContainer.innerHTML += guestBubbleHtml;
 
-      // 2. 比對資料庫
       let matchedResponse = null;
 
-      // A. 比對品項
       for (let item of storeItemDB) {
         if (item.keywords.some(kw => lowerInput.includes(kw))) {
-          matchedResponse = `📍 【${item.name}】\n• 中文位置：${item.locZh}\n• English Location: ${item.locEn}\n\n"It's located at ${item.locEn}. Please follow me!"`;
+          const langGuide = itemFollowSpeech[currentLang] || itemFollowSpeech.en;
+          matchedResponse = `📍 【${item.name}】\n• 中文位置：${item.locZh}\n• Target (${langVoiceMap[currentLang].label}): ${item.locEn}\n\n"${langGuide.text} ${item.locEn}. ${langGuide.follow}"`;
           break;
         }
       }
 
-      // B. 比對規章
       if (!matchedResponse) {
         for (let key in storePolicyDB) {
           const policy = storePolicyDB[key];
@@ -701,15 +679,13 @@
         }
       }
 
-      // C. 防呆轉接提示
       if (!matchedResponse) {
-        matchedResponse = "目前 AI 隨身助理無法處理此問題，請尋求現場門市夥伴（家事小精靈）協助！\n\n(Currently unable to process this request. Please ask our store staff for assistance.)";
+        matchedResponse = fallbackMap[currentLang] || fallbackMap.en;
       }
 
-      // 3. 新增 AI 建議回覆對話泡泡
       let staffBubbleHtml = `
         <div class="chat-bubble staff">
-          <span class="bubble-sender">🤖 AI 建議對話 (Staff Action)</span>
+          <span class="bubble-sender">🤖 AI 建議對話 [${langVoiceMap[currentLang].label}]</span>
           <div class="bubble-content">
             <div class="bubble-text-msg">${escapeHtml(matchedResponse)}</div>
             <div class="card-actions" style="margin-top: 8px;">
@@ -721,7 +697,6 @@
       `;
       threadContainer.innerHTML += staffBubbleHtml;
 
-      // 清空輸入框並滾動至最底端
       inputElem.value = '';
       const viewContainer = document.querySelector('.view-container');
       viewContainer.scrollTop = viewContainer.scrollHeight;
@@ -735,16 +710,12 @@
 
     function showBigTextFromCard(btnElem) {
       const msgDiv = btnElem.closest('.bubble-content').querySelector('.bubble-text-msg');
-      if (msgDiv) {
-        showBigText(msgDiv.innerText);
-      }
+      if (msgDiv) showBigText(msgDiv.innerText);
     }
 
     function speakTextFromCard(btnElem) {
       const msgDiv = btnElem.closest('.bubble-content').querySelector('.bubble-text-msg');
-      if (msgDiv) {
-        speakText(msgDiv.innerText);
-      }
+      if (msgDiv) speakText(msgDiv.innerText);
     }
 
     function copySocialTags() {
@@ -755,7 +726,6 @@
       });
     }
 
-    // 切換語系並更新所有頁面
     function setLang(lang, btnElem) {
       currentLang = lang;
       document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
@@ -884,7 +854,6 @@
       recognition.start();
     }
 
-    // 初始載入
     renderSOPCards();
     renderPolicies();
     renderMapZones();
