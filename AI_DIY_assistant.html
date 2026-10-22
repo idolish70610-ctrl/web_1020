@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>自己做 DIY Baking - 全功能 AI 門市隨身口譯助理 (完全修復版)</title>
+  <title>自己做 DIY Baking - 店員端隨身 AI 溝通助理 (Staff Copilot)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -57,7 +57,7 @@
       letter-spacing: 0.5px;
     }
     .header-title {
-      font-size: 16px;
+      font-size: 15.5px;
       font-weight: 800;
       color: #382f29;
       margin-top: 3px;
@@ -116,54 +116,31 @@
     /* 內容可滾動區域 */
     .view-container {
       flex: 1;
-      padding: 14px;
+      padding: 12px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
     .view-pane {
       display: none;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
     .view-pane.active {
       display: flex;
     }
 
-    /* 標題與卡片元件 */
     .section-title {
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 800;
       color: #574c43;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
-    .section-title span {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
 
-    /* 1. 入店 4 步驟流程卡 */
-    .flow-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .flow-card {
-      background: #fcf6ed;
-      border: 1px solid #f2e2d0;
-      border-radius: 12px;
-      padding: 8px;
-      text-align: center;
-    }
-    .flow-icon { font-size: 20px; margin-bottom: 2px; }
-    .flow-step { font-size: 11px; font-weight: 800; color: #d96b43; }
-    .flow-text { font-size: 10.5px; color: #6e6359; margin-top: 1px; font-weight: 600; }
-
-    /* 2. 9步驟 SOP 階段選單與卡片 */
+    /* 1. SOP 與親切話術卡片樣式 */
     .phase-sub-tabs {
       display: flex;
       gap: 5px;
@@ -191,11 +168,11 @@
       background: #ffffff;
       border: 1.5px solid #f0e6da;
       border-radius: 14px;
-      padding: 12px;
+      padding: 11px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.02);
+      gap: 5px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
     .sop-badge {
       font-size: 10px;
@@ -206,35 +183,33 @@
       border-radius: 6px;
       width: fit-content;
     }
-    .sop-title-zh { font-size: 13.5px; font-weight: 800; color: #2b231d; }
+    .sop-title-zh { font-size: 13px; font-weight: 800; color: #2b231d; }
     .sop-trans-text {
-      font-size: 12px;
+      font-size: 11.5px;
       color: #4a3e35;
       background: #faf6f0;
-      padding: 8px;
+      padding: 7px;
       border-radius: 8px;
       line-height: 1.4;
       font-weight: 600;
       border-left: 3px solid #d96b43;
+      white-space: pre-line;
     }
     .card-actions {
       display: flex;
       gap: 6px;
       justify-content: flex-end;
-      margin-top: 4px;
+      margin-top: 3px;
     }
     .btn-mini {
       background: #f4efe6;
       border: 1px solid #e5dcd0;
       color: #4a3e35;
-      padding: 5px 10px;
-      border-radius: 8px;
-      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 7px;
+      font-size: 10.5px;
       font-weight: 700;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 3px;
     }
     .btn-mini.primary {
       background: #d96b43;
@@ -242,13 +217,12 @@
       border-color: #d96b43;
     }
 
-    /* 3. 門市地圖與分區卡片 */
+    /* 2. 門市地圖與分區卡片 */
     .map-box {
       background: #ffffff;
       border: 1.5px solid #f0e6da;
       border-radius: 16px;
       padding: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     }
     .map-grid {
       display: grid;
@@ -263,83 +237,61 @@
       padding: 10px;
       text-align: center;
     }
-    .zone-card-title { font-size: 12.5px; font-weight: 800; color: #2b231d; }
+    .zone-card-title { font-size: 12px; font-weight: 800; color: #2b231d; }
     .zone-card-en { font-size: 10px; color: #738240; font-weight: 700; margin-top: 2px; }
-    .zone-card-desc { font-size: 10px; color: #7a6e62; margin-top: 4px; }
 
-    /* 4. AI 對話與快捷 Scenario Chips */
-    .scenarios-bar {
+    /* 3. 對話歷史紀錄流 (Chat Thread Stream) */
+    .chat-thread {
       display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      scrollbar-width: none;
+      flex-direction: column;
+      gap: 12px;
     }
-    .scenarios-bar::-webkit-scrollbar { display: none; }
-    .chip-btn {
-      background: #f4efe6;
-      border: 1px solid #e6ddd1;
-      color: #574c43;
-      padding: 6px 12px;
-      border-radius: 18px;
-      font-size: 11.5px;
-      font-weight: 700;
-      white-space: nowrap;
-      cursor: pointer;
+    .chat-bubble {
       display: flex;
-      align-items: center;
+      flex-direction: column;
       gap: 4px;
+      max-width: 90%;
     }
-    .chip-btn.active {
-      background: #d96b43;
-      color: #ffffff;
-      border-color: #d96b43;
-      box-shadow: 0 3px 8px rgba(217, 107, 67, 0.25);
+    .chat-bubble.guest {
+      align-self: flex-start;
     }
-
-    .ai-card {
-      background: #ffffff;
-      border: 1.5px solid #f3e6d8;
-      border-radius: 18px;
-      padding: 14px;
-      box-shadow: 0 6px 16px rgba(217, 107, 67, 0.06);
+    .chat-bubble.staff {
+      align-self: flex-end;
     }
-    .ai-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-    .ai-tag {
-      background: #fceee6;
-      color: #d96b43;
-      font-size: 10.5px;
+    .bubble-sender {
+      font-size: 10px;
       font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 10px;
+      color: #8c7e72;
     }
-    .zh-summary {
-      font-size: 12px;
-      color: #6e6359;
-      font-weight: 600;
-      margin-bottom: 10px;
-      padding-bottom: 6px;
-      border-bottom: 1px dashed #eee7dd;
-      line-height: 1.35;
-    }
-    .speech-box {
-      background: #faf6f0;
-      border-left: 4px solid #d96b43;
+    .bubble-content {
+      background: #ffffff;
+      border: 1px solid #e8dec8;
+      border-radius: 14px;
       padding: 10px 12px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-    .speech-text {
-      font-size: 13.5px;
-      font-weight: 700;
-      color: #2b231d;
+      font-size: 12.5px;
       line-height: 1.45;
+      color: #2b231d;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .chat-bubble.guest .bubble-content {
+      border-left: 4px solid #738240;
+    }
+    .chat-bubble.staff .bubble-content {
+      background: #fceee6;
+      border: 1px solid #fcdbca;
+      border-right: 4px solid #d96b43;
+    }
+    .bubble-text-msg {
       white-space: pre-line;
+      line-height: 1.45;
+    }
+    .zh-translation {
+      font-size: 11px;
+      color: #d96b43;
+      font-weight: 700;
+      margin-top: 4px;
+      padding-top: 4px;
+      border-top: 1px dashed #e3d7c5;
     }
 
     /* 底部輸入列 */
@@ -352,104 +304,47 @@
       gap: 8px;
     }
     .mic-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #fceee6;
-      color: #d96b43;
-      border: 1px solid #fcdbca;
-      font-size: 17px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: #fceee6; color: #d96b43; border: 1px solid #fcdbca;
+      font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center;
     }
-    .mic-btn.recording {
-      background: #d96b43;
-      color: #ffffff;
-      animation: pulse 1s infinite;
-    }
+    .mic-btn.recording { background: #d96b43; color: #ffffff; animation: pulse 1s infinite; }
     .text-input {
-      flex: 1;
-      height: 40px;
-      background: #f7f3ec;
-      border: 1px solid #e5dcd0;
-      border-radius: 20px;
-      padding: 0 14px;
-      font-size: 12.5px;
-      outline: none;
-      color: #382f29;
+      flex: 1; height: 40px; background: #f7f3ec; border: 1px solid #e5dcd0;
+      border-radius: 20px; padding: 0 14px; font-size: 12px; outline: none; color: #382f29;
     }
     .send-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #738240;
-      color: #ffffff;
-      border: none;
-      font-size: 15px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 3px 8px rgba(115, 130, 64, 0.2);
+      width: 40px; height: 40px; border-radius: 50%;
+      background: #738240; color: #ffffff; border: none; font-size: 15px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
     }
 
     /* 📱 滿版大字 Modal (Flip to Guest) */
     .fullscreen-modal {
-      display: none;
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: #111111;
-      color: #ffffff;
-      z-index: 2000;
-      padding: 30px 20px 24px 20px;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      text-align: center;
-      border-radius: 38px;
+      display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: #111111; color: #ffffff; z-index: 2000; padding: 30px 20px 24px 20px;
+      flex-direction: column; justify-content: space-between; align-items: center; text-align: center; border-radius: 38px;
     }
     .fullscreen-modal.active { display: flex; }
-    .modal-tag { color: #ff8c42; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; }
-    .big-text {
-      font-size: 23px;
-      font-weight: 800;
-      color: #ffffff;
-      line-height: 1.5;
-      margin: auto 0;
-      white-space: pre-line;
-    }
+    .modal-tag { color: #ff8c42; font-size: 13px; font-weight: 800; }
+    .big-text { font-size: 22px; font-weight: 800; color: #ffffff; line-height: 1.5; margin: auto 0; white-space: pre-line; }
     .close-big-btn {
-      background: #ff8c42;
-      color: #111111;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 12px;
-      font-size: 14.5px;
-      font-weight: 800;
-      cursor: pointer;
-      width: 100%;
+      background: #ff8c42; color: #111111; border: none; padding: 12px 24px;
+      border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer; width: 100%;
     }
 
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-      100% { transform: scale(1); }
-    }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
   </style>
 </head>
 <body>
 
   <div class="mobile-app-container">
     
-    <!-- 頂部品牌 Header & 語言切換 -->
+    <!-- 頂部 Header & 多國語言列 -->
     <div class="app-header">
       <div>
         <span class="brand-badge">自己做 DIY BAKING</span>
-        <div class="header-title">🌿 AI 門市隨身口譯助理</div>
+        <div class="header-title">🌿 店員 AI 隨身口譯 Copilot</div>
       </div>
       <div class="lang-selector">
         <button class="lang-btn active" onclick="setLang('en', this)">🇬🇧 EN</button>
@@ -459,19 +354,55 @@
       </div>
     </div>
 
-    <!-- 主選單 Tab 導引列 -->
+    <!-- 主選單 Tab -->
     <div class="main-nav-tabs">
-      <button class="nav-tab-btn active" id="tab-sops" onclick="switchNavTab('sops', this)">📋 9步驟 SOP</button>
-      <button class="nav-tab-btn" id="tab-flow" onclick="switchNavTab('flow', this)">📱 流程與規章</button>
-      <button class="nav-tab-btn" id="tab-map" onclick="switchNavTab('map', this)">🗺️ 門市導覽</button>
-      <button class="nav-tab-btn" id="tab-ai" onclick="switchNavTab('ai', this)">💬 AI 即時對話</button>
+      <button class="nav-tab-btn active" id="tab-ai" onclick="switchNavTab('ai', this)">💬 即時對話歷程</button>
+      <button class="nav-tab-btn" id="tab-sops" onclick="switchNavTab('sops', this)">📋 接待 SOP</button>
+      <button class="nav-tab-btn" id="tab-flow" onclick="switchNavTab('flow', this)">📜 門市規章</button>
+      <button class="nav-tab-btn" id="tab-map" onclick="switchNavTab('map', this)">🗺️ 區域與親切引導</button>
     </div>
 
-    <!-- 內容滾動視窗 -->
+    <!-- 內容區 -->
     <div class="view-container">
       
-      <!-- PANE 1: 9步驟接待 SOP (含三個階段分頁) -->
-      <div class="view-pane active" id="pane-sops">
+      <!-- PANE 1: 💬 店員雙向對話紀錄流 (Chat Thread Log) -->
+      <div class="view-pane active" id="pane-ai">
+        <div class="section-title">
+          <span>💬 店員對話歷程 (Staff Diagnostic Log)</span>
+        </div>
+        
+        <!-- 滾動對話框 -->
+        <div class="chat-thread" id="chatThread">
+          
+          <!-- 預設訊息 1: 顧客詢問 -->
+          <div class="chat-bubble guest">
+            <span class="bubble-sender">👤 外籍顧客 (Guest Input)</span>
+            <div class="bubble-content">
+              <div class="bubble-text-msg">Where can I find the scissors and baking paper?</div>
+              <div class="zh-translation">💡 中文翻譯：「請問剪刀和烤盤紙在哪裡？」</div>
+            </div>
+          </div>
+
+          <!-- 預設訊息 2: AI 智慧解析與建議回覆 -->
+          <div class="chat-bubble staff">
+            <span class="bubble-sender">🤖 AI 建議回覆 (Staff Action)</span>
+            <div class="bubble-content">
+              <div class="bubble-text-msg">📍 剪刀：洞洞牆區 A2 掛勾 (Hook A2)
+📄 烤盤紙：模具區 A 層架抽屜內 (Drawer A)
+
+"Scissors are at Pegboard Hook A2, and baking paper is in Drawer A!"</div>
+              <div class="card-actions" style="margin-top: 8px;">
+                <button class="btn-mini" onclick="speakTextFromCard(this)">🔊 發音</button>
+                <button class="btn-mini primary" onclick="showBigTextFromCard(this)">📱 轉向展示</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- PANE 2: 📋 門市 9 步驟接待 SOP -->
+      <div class="view-pane" id="pane-sops">
         <div class="phase-sub-tabs">
           <button class="phase-sub-btn active" onclick="switchPhase(1, this)">1. 迎賓報到結帳</button>
           <button class="phase-sub-btn" onclick="switchPhase(2, this)">2. 會員與集點</button>
@@ -482,160 +413,122 @@
         </div>
       </div>
 
-      <!-- PANE 2: 入店流程卡 + 4大規章解說卡 -->
+      <!-- PANE 3: 📜 門市 4 大規章一鍵解說卡 -->
       <div class="view-pane" id="pane-flow">
-        
         <div class="section-title">
-          <span>📱 30秒入店體驗流程 (Store Flow)</span>
-        </div>
-        <div class="flow-grid">
-          <div class="flow-card">
-            <div class="flow-icon">🍰</div>
-            <div class="flow-step">1. Pick & Pay</div>
-            <div class="flow-text">選甜點並結帳</div>
-          </div>
-          <div class="flow-card">
-            <div class="flow-icon">🧼</div>
-            <div class="flow-step">2. Store & Wash</div>
-            <div class="flow-text">放包包與洗手</div>
-          </div>
-          <div class="flow-card">
-            <div class="flow-icon">🥣</div>
-            <div class="flow-step">3. Collect Tools</div>
-            <div class="flow-text">拿取食材與器具</div>
-          </div>
-          <div class="flow-card">
-            <div class="flow-icon">🧽</div>
-            <div class="flow-step">4. Clean & Pack</div>
-            <div class="flow-text">洗碗歸位與打包</div>
-          </div>
-        </div>
-
-        <div class="section-title" style="margin-top: 6px;">
-          <span>📜 門市 4 大規章一鍵多國語言卡</span>
+          <span>📜 門市 4 大規章一鍵解說卡</span>
         </div>
         
-        <!-- 規章 1: 壽星與陪伴費 -->
         <div class="sop-card">
           <span class="sop-badge">消費規章 Policy</span>
           <div class="sop-title-zh">🎂 壽星優惠與 $149 陪伴費規定</div>
           <div class="sop-trans-text" id="policy-bday-text">-</div>
           <div class="card-actions">
             <button class="btn-mini" onclick="speakCurrentText('policy-bday-text')">🔊 發音</button>
-            <button class="btn-mini primary" onclick="showBigTextById('policy-bday-text')">📱 大字展示</button>
+            <button class="btn-mini primary" onclick="showBigTextById('policy-bday-text')">📱 轉向展示</button>
           </div>
         </div>
 
-        <!-- 規章 2: 容器使用規則 -->
         <div class="sop-card">
           <span class="sop-badge">器具安全 Safety</span>
           <div class="sop-title-zh">🥣 容器使用鐵律 (一個碗裝一種)</div>
           <div class="sop-trans-text" id="policy-bowl-text">-</div>
           <div class="card-actions">
             <button class="btn-mini" onclick="speakCurrentText('policy-bowl-text')">🔊 發音</button>
-            <button class="btn-mini primary" onclick="showBigTextById('policy-bowl-text')">📱 大字展示</button>
+            <button class="btn-mini primary" onclick="showBigTextById('policy-bowl-text')">📱 轉向展示</button>
           </div>
         </div>
 
-        <!-- 規章 3: 自助清洗與僅供外帶 -->
         <div class="sop-card">
           <span class="sop-badge">環境規範 Environment</span>
           <div class="sop-title-zh">🧽 全自助器皿清洗與僅供外帶</div>
           <div class="sop-trans-text" id="policy-wash-text">-</div>
           <div class="card-actions">
             <button class="btn-mini" onclick="speakCurrentText('policy-wash-text')">🔊 發音</button>
-            <button class="btn-mini primary" onclick="showBigTextById('policy-wash-text')">📱 大字展示</button>
+            <button class="btn-mini primary" onclick="showBigTextById('policy-wash-text')">📱 轉向展示</button>
           </div>
         </div>
 
-        <!-- 規章 4: 預約與體驗時間 -->
         <div class="sop-card">
           <span class="sop-badge">時間規範 Duration</span>
           <div class="sop-title-zh">⏱️ 預約保留 10 分鐘與體驗時間</div>
           <div class="sop-trans-text" id="policy-time-text">-</div>
           <div class="card-actions">
             <button class="btn-mini" onclick="speakCurrentText('policy-time-text')">🔊 發音</button>
-            <button class="btn-mini primary" onclick="showBigTextById('policy-time-text')">📱 大字展示</button>
+            <button class="btn-mini primary" onclick="showBigTextById('policy-time-text')">📱 轉向展示</button>
           </div>
         </div>
-
       </div>
 
-      <!-- PANE 3: 門市 4 大區域導覽地圖 -->
+      <!-- PANE 4: 🗺️ 門市 4 大區域導覽與親切互動話術 (含帶路、讚美拍照與社群Tag) -->
       <div class="view-pane" id="pane-map">
         <div class="section-title">
-          <span>🗺️ 門市 4 大區域全景導覽 (Store Layout)</span>
+          <span>🗺️ 門市 4 大區域多國語言指引</span>
         </div>
         <div class="map-box">
-          <div style="font-size: 11.5px; color: #7a6e62; font-weight: 700; margin-bottom: 6px;">🧭 現場大方向區域指引：</div>
+          <div style="font-size: 11.5px; color: #7a6e62; font-weight: 700; margin-bottom: 6px;">🧭 門市現場四大分區 (Direction Zones)：</div>
           <div class="map-grid">
             <div class="zone-card">
-              <div style="font-size: 22px;">🧭</div>
-              <div class="zone-card-title">中間左右區</div>
-              <div class="zone-card-en">Ingredients Station</div>
-              <div class="zone-card-desc">取料區 (粉類/配料)</div>
+              <div style="font-size: 20px;">🧭</div>
+              <div class="zone-card-title" id="zone-mid-title">中間左右區</div>
+              <div class="zone-card-en" id="zone-mid-desc">取料區 (粉類/配料)</div>
             </div>
             <div class="zone-card">
-              <div style="font-size: 22px;">🪟</div>
-              <div class="zone-card-title">靠窗區</div>
-              <div class="zone-card-en">Mixing Area</div>
-              <div class="zone-card-desc">電動攪拌區</div>
+              <div style="font-size: 20px;">🪟</div>
+              <div class="zone-card-title" id="zone-win-title">靠窗區</div>
+              <div class="zone-card-en" id="zone-win-desc">電動攪拌區</div>
             </div>
             <div class="zone-card">
-              <div style="font-size: 22px;">🔥</div>
-              <div class="zone-card-title">取料區後面</div>
-              <div class="zone-card-en">Decor & Ovens</div>
-              <div class="zone-card-desc">裝飾區與烤箱區</div>
+              <div style="font-size: 20px;">🔥</div>
+              <div class="zone-card-title" id="zone-oven-title">取料區後面</div>
+              <div class="zone-card-en" id="zone-oven-desc">裝飾區與烤箱區</div>
             </div>
             <div class="zone-card">
-              <div style="font-size: 22px;">🧽</div>
-              <div class="zone-card-title">再往後走</div>
-              <div class="zone-card-en">Washing Sinks</div>
-              <div class="zone-card-desc">自助洗滌區</div>
+              <div style="font-size: 20px;">🧽</div>
+              <div class="zone-card-title" id="zone-wash-title">再往後走</div>
+              <div class="zone-card-en" id="zone-wash-desc">自助洗滌區</div>
             </div>
           </div>
         </div>
 
-        <!-- 門市容器使用指南 -->
-        <div class="sop-card" style="margin-top: 4px;">
-          <span class="sop-badge">容器對照 Container Guide</span>
-          <div class="sop-title-zh">🥣 彩色塑膠碗 vs 白色瓷碗</div>
-          <div class="sop-trans-text" id="map-container-guide-text">-</div>
+        <div class="section-title" style="margin-top: 6px;">
+          <span>💬 引導顧客一鍵親切話術 (Friendly Interactions)</span>
+        </div>
+
+        <!-- 親切話術 1：帶路指引 -->
+        <div class="sop-card">
+          <span class="sop-badge">請跟我來 Follow Me</span>
+          <div class="sop-title-zh">🚶‍♂️ 帶路引導親切話術</div>
+          <div class="sop-trans-text" id="follow-me-text">-</div>
           <div class="card-actions">
-            <button class="btn-mini primary" onclick="showBigTextById('map-container-guide-text')">📱 大字展示</button>
+            <button class="btn-mini" onclick="speakCurrentText('follow-me-text')">🔊 發音</button>
+            <button class="btn-mini primary" onclick="showBigTextById('follow-me-text')">📱 轉向展示</button>
           </div>
-        </div>
-      </div>
-
-      <!-- PANE 4: AI 即時對話與語音輸入 -->
-      <div class="view-pane" id="pane-ai">
-        <div class="section-title">
-          <span>⚡ 高頻對話快捷鈕 (Quick Scenario)</span>
-        </div>
-        <div class="scenarios-bar">
-          <button class="chip-btn active" id="chip-birthday" onclick="selectScenario('birthday')">🎂 壽星陪伴費</button>
-          <button class="chip-btn" id="chip-allergen" onclick="selectScenario('allergen')">⚠️ 過敏原成分</button>
-          <button class="chip-btn" id="chip-location" onclick="selectScenario('location')">📍 剪刀模具位置</button>
-          <button class="chip-btn" id="chip-wash" onclick="selectScenario('wash')">🧼 自助洗滌區</button>
         </div>
 
-        <div class="ai-card">
-          <div class="ai-header">
-            <div class="ai-tag" id="aiTag">✨ AI 口譯建議 (Target: English)</div>
-            <div style="font-size:10px; color:#a39688; font-weight:700;">智慧 3 層資料庫檢索</div>
-          </div>
-          <div class="zh-summary" id="zhSummary">💡 說明重點：熱情祝賀壽星，並說明陪伴者需選擇製作品項或付陪伴費以維護門市體驗品質。</div>
-          <div class="speech-box">
-            <div class="speech-text" id="targetSpeech">
-              "Happy Birthday! 🎉 Our Birthday Special offers a free cake for the birthday star! To ensure everyone has a great seat, companions are required to select a dessert or choose a companion fee. That way, both of you can enjoy the DIY fun together!"
-            </div>
-          </div>
+        <!-- 親切話術 2：成品讚美與主動拍照 -->
+        <div class="sop-card">
+          <span class="sop-badge">熱情讚美 Photo Service</span>
+          <div class="sop-title-zh">🎂 成品熱情讚美與主動拍照</div>
+          <div class="sop-trans-text" id="praise-photo-text">-</div>
           <div class="card-actions">
-            <button class="btn-mini" onclick="speakCurrentText('targetSpeech')">🔊 播放發音</button>
-            <button class="btn-mini" onclick="copyCurrentText('targetSpeech')">📋 複製話術</button>
-            <button class="btn-mini primary" onclick="showBigTextById('targetSpeech')">📱 大字展示</button>
+            <button class="btn-mini" onclick="speakCurrentText('praise-photo-text')">🔊 發音</button>
+            <button class="btn-mini primary" onclick="showBigTextById('praise-photo-text')">📱 轉向展示</button>
           </div>
         </div>
+
+        <!-- 親切話術 3：社群標籤一鍵複製與展示 -->
+        <div class="sop-card">
+          <span class="sop-badge">社群分享 Social Tag</span>
+          <div class="sop-title-zh">📸 社群標籤一鍵複製 (IG / TikTok)</div>
+          <div class="sop-trans-text" id="social-tag-text">-</div>
+          <div class="card-actions">
+            <button class="btn-mini" onclick="speakCurrentText('social-tag-text')">🔊 發音</button>
+            <button class="btn-mini" onclick="copySocialTags()">📋 複製 Tag 內容</button>
+            <button class="btn-mini primary" onclick="showBigTextById('social-tag-text')">📱 轉向展示</button>
+          </div>
+        </div>
+
       </div>
 
     </div>
@@ -643,11 +536,11 @@
     <!-- 底部即時輸入列 (固定在底端) -->
     <div class="input-bar">
       <button class="mic-btn" id="micBtn" onclick="toggleMic()" title="點擊語音輸入">🎙️</button>
-      <input type="text" id="userInput" class="text-input" placeholder="輸入品項(剪刀/scissors)或問題..." onkeypress="if(event.key==='Enter') sendInput();">
+      <input type="text" id="userInput" class="text-input" placeholder="輸入顧客問題(如scissors)或中文需求..." onkeypress="if(event.key==='Enter') sendInput();">
       <button class="send-btn" onclick="sendInput()" title="傳送">⚡</button>
     </div>
 
-    <!-- 📱 滿版大字 Modal (Show to Guest) -->
+    <!-- 📱 滿版大字 Modal (Flip to Guest) -->
     <div class="fullscreen-modal" id="bigTextModal">
       <div class="modal-tag">📱 請將螢幕轉向外籍顧客觀看 (FLIP TO GUEST)</div>
       <div class="big-text" id="bigTextContent">-</div>
@@ -659,7 +552,6 @@
   <script>
     let currentLang = 'en';
     let currentPhase = 1;
-    let currentScenarioKey = 'birthday';
 
     const langVoiceMap = {
       en: { code: 'en-US', label: 'English' },
@@ -668,71 +560,28 @@
       vn: { code: 'vi-VN', label: 'Tiếng Việt' }
     };
 
-    // 1. 門市實體品項與位置精華資料庫 (storeItemDB)
+    // 1. 門市實體品項與位置資料庫
     const storeItemDB = [
-      { 
-        keywords: ["剪刀", "scissors", "scissor", "cut"], 
-        name: "✂️ 剪刀 (Baking Scissors)", 
-        locZh: "洞洞牆區 A2 掛勾", 
-        locEn: "Pegboard Area - Hook A2",
-        desc: "用於剪開粉類包裝袋、烤盤紙或果醬袋。"
-      },
-      { 
-        keywords: ["方模", "模具", "方模具", "mold", "molds", "square"], 
-        name: "📦 【D區】方模 (Square Mold 6/8 inch)", 
-        locZh: "模具區 D 層架 2 號位置", 
-        locEn: "Molds Station - Shelf D (#2)",
-        desc: "金屬四方型模具，用於戚風蛋糕或布朗尼定型。"
-      },
-      { 
-        keywords: ["烤盤紙", "烘焙紙", "paper", "baking paper", "parchment"], 
-        name: "📄 【A區】烤盤紙 (Baking Paper)", 
-        locZh: "模具區 A 層架 抽屜內", 
-        locEn: "Molds Station - Drawer A",
-        desc: "白色耐熱烘焙紙，鋪於模具底部防粘黏。"
-      },
-      { 
-        keywords: ["手粉", "低筋", "flour", "dusting"], 
-        name: "🥣 手粉 (Dusting Flour)", 
-        locZh: "檯面 B 區 (小透明罐)", 
-        locEn: "Countertop Section B (Transparent Jar)",
-        desc: "防粘黏低筋麵粉，桌上隨手可取。"
-      },
-      { 
-        keywords: ["工作盆", "鋼盆", "mixing bowl", "bowl", "bowls"], 
-        name: "🥣 工作盆 (Stainless Steel Mixing Bowl)", 
-        locZh: "器材區 B1 (洗手台旁)", 
-        locEn: "Equipment Area B1 (Next to Sinks)",
-        desc: "銀色不鏽鋼大金屬盆，堆疊放置。"
-      },
-      { 
-        keywords: ["黃色圓盒", "黃盒", "yellow box", "yellow"], 
-        name: "🟡 黃色圓盒 (#1 Yellow Box)", 
-        locZh: "冰箱冷藏區 A 區", 
-        locEn: "Refrigerator Section A",
-        desc: "黃色圓形塑膠盒，盒蓋貼有 1 號標籤。"
-      },
-      { 
-        keywords: ["壓模", "月餅", "蛋黃酥", "mooncake", "press"], 
-        name: "🥮 蛋黃酥壓模 (Mooncake Mold)", 
-        locZh: "期間限定專區 C3", 
-        locEn: "Seasonal Section C3",
-        desc: "中秋/萬聖限定塑膠壓模。"
-      }
+      { keywords: ["剪刀", "scissors", "scissor", "cut"], name: "✂️ 剪刀 (Baking Scissors)", locZh: "洞洞牆區 A2 掛勾", locEn: "Pegboard Area - Hook A2" },
+      { keywords: ["方模", "模具", "方模具", "mold", "molds", "square"], name: "📦 【D區】方模 (Square Mold 6/8 inch)", locZh: "模具區 D 層架 2 號位置", locEn: "Molds Station - Shelf D (#2)" },
+      { keywords: ["烤盤紙", "烘焙紙", "paper", "baking paper", "parchment"], name: "📄 【A區】烤盤紙 (Baking Paper)", locZh: "模具區 A 層架 抽屜內", locEn: "Molds Station - Drawer A" },
+      { keywords: ["手粉", "低筋", "flour", "dusting"], name: "🥣 手粉 (Dusting Flour)", locZh: "檯面 B 區 (小透明罐)", locEn: "Countertop Section B" },
+      { keywords: ["工作盆", "鋼盆", "mixing bowl", "bowl", "bowls"], name: "🥣 工作盆 (Mixing Bowl)", locZh: "器材區 B1 (洗手台旁)", locEn: "Equipment Area B1" },
+      { keywords: ["黃色圓盒", "黃盒", "yellow box", "yellow"], name: "🟡 黃色圓盒 (#1 Yellow Box)", locZh: "冰箱冷藏區 A 區", locEn: "Refrigerator Section A" }
     ];
 
-    // 2. 門市規章與 FAQ 資料庫 (storePolicyDB - 確保變數名稱一致！)
+    // 2. 門市規章 FAQ 資料庫
     const storePolicyDB = {
       bday: {
-        keywords: ["壽星", "生日", "陪伴", "陪伴費", "149", "birthday", "bday", "companion", "friend", "accompany"],
-        title: "🎂 壽星優惠與 $149 陪伴費規定",
+        keywords: ["壽星", "生日", "陪伴", "陪伴費", "149", "birthday", "bday", "companion", "friend"],
+        title: "🎂 壽星優惠與 \$149 陪伴費規定",
         en: "Happy Birthday! 🎉 Birthday stars get a free cake! Companions need to pick a dessert or pay a NT\$149 companion fee so everyone has a seat!",
         jp: "お誕生日おめでとうございます！🎂 主役の方はケーキ1個無料！お席確保のため、ご同伴者様はスイーツ1品選択か同伴料（149元）を頂戴しております。",
         kr: "생일 축하합니다! 🎉 생일자는 케이크 1개 무료! 좌석 확보를 위해 동반인은 디저트 1개 선택 또는 동반료(NT\$149) 결제가 필요합니다.",
         vn: "Chúc mừng sinh nhật! 🎉 Người có sinh nhật được tặng 1 bánh miễn phí! Để có chỗ ngồi, người đi cùng cần chọn 1 món bánh hoặc trả phí đi cùng (149 TWD)."
       },
       bowl: {
-        keywords: ["碗", "容器", "塑膠", "瓷碗", "微波", "bowl", "bowls", "container", "plastic", "ceramic", "microwave"],
+        keywords: ["碗", "容器", "塑膠", "瓷碗", "微波", "bowl", "bowls", "container", "plastic", "ceramic"],
         title: "🥣 容器使用鐵律 (一個碗裝一種)",
         en: "1 bowl per ingredient!\n🟢 Plastic Bowl = Dry & Cold items (No microwave!)\n⚪ Ceramic Bowl = Butter & Microwavable liquids.",
         jp: "1つのボウルに1つの材料！\n🟢 プラスチック = 粉類・冷藏（レンジ不可）\n⚪ 陶器ボウル = バター・加熱用（レンジ可）",
@@ -740,7 +589,7 @@
         vn: "1 bát chứa 1 nguyên liệu!\n🟢 Bát nhựa = Bột & Đồ lạnh (Không quay vi sóng!)\n⚪ Bát sứ = Bơ & Chất lỏng quay vi sóng."
       },
       wash: {
-        keywords: ["洗碗", "清洗", "洗滌", "外帶", "內用", "wash", "washing", "clean", "cleaning", "sink", "sinks", "takeaway", "dine"],
+        keywords: ["洗碗", "清洗", "洗滌", "外帶", "內用", "wash", "washing", "clean", "sink", "takeaway"],
         title: "🧽 全自助器皿清洗與僅供外帶",
         en: "We are a self-service studio! Please wash and return all tools after baking. Cakes are for takeaway only (no dine-in).",
         jp: "完全セルフサービスです。使用後の道具は洗って元の場所へお戻しください。ケーキはお持ち帰りのみ（店内飲食不可）となります。",
@@ -748,209 +597,204 @@
         vn: "Mô hình tự phục vụ! Vui lòng tự rửa và cất dụng cụ sau khi làm xong. Bánh chỉ mang về (không ăn tại cửa hàng)."
       },
       time: {
-        keywords: ["時間", "預約", "遲到", "保留", "2小時", "time", "duration", "reservation", "late", "reserve", "hold"],
+        keywords: ["時間", "預約", "遲到", "保留", "2小時", "time", "duration", "reservation", "late"],
         title: "⏱️ 預約保留 10 分鐘與體驗時間",
         en: "Reservations are held for 10 minutes. DIY session is 2 hours. Please enjoy your baking experience!",
         jp: "ご予約は10分間保持されます。体験時間は2時間です。どうぞお楽しみください！",
-        kr: "예약은 10분간 유지됩니다. 이용 시간은 2시간입니다. 즐거운時間 되세요!",
+        kr: "예약은 10분간 유지されます。이용 시간은 2시간입니다. 즐거운時間 되세요!",
         vn: "Đặt chỗ được giữ trong 10 phút. Thời gian làm bánh là 2 tiếng. Chúc bạn vui vẻ!"
       }
     };
 
-    // 3. 9 步驟 SOP 資料庫
-    const sopDatabase = {
-      1: [
-        {
-          num: "Step 1",
-          zh: "1. 招呼與詢問預約",
-          en: "Welcome to DIY Baking Club! Do you have a reservation?",
-          jp: "いらっしゃいませ！ご予約はございますか？",
-          kr: "안녕하세요! 예약하셨나요?",
-          vn: "Chào mừng bạn đến với DIY Baking Club! Bạn có đặt chỗ trước không?"
-        },
-        {
-          num: "Step 2",
-          zh: "2. 核對預約姓名與電話末三碼",
-          en: "May I have your name and the last 3 digits of your phone number?",
-          jp: "お名前とお電話番号の下3桁を教えていただけますか？",
-          kr: "성함과 전화번호 뒷 3자리를 말씀해 주시겠어요?",
-          vn: "Cho mình xin tên và 3 số cuối số điện thoại nhé?"
-        },
-        {
-          num: "Step 3",
-          zh: "3. 確認要做品項 / 展示菜單",
-          en: "Here is our menu. Which dessert would you like to make today?",
-          jp: "こちらがメニューです。本日お作りになるスイーツをお選びください。",
-          kr: "메뉴판입니다. 오늘 어떤 디저트를 만드시겠어요?",
-          vn: "Đây là menu ạ. Hôm nay bạn muốn làm món bánh nào?"
-        },
-        {
-          num: "Step 4",
-          zh: "4. 結帳 (僅 Cash/LINE Pay) 與載具詢問",
-          en: "Payment is via Cash or LINE Pay only. Do you have an e-invoice carrier?",
-          jp: "お支払いは現金またはLINE Payのみです。電子レシートのキャリアはお持ちですか？",
-          kr: "결제는 현금과 LINE Pay만 가능합니다. 모바일 영수증 바코드가 있으신가요?",
-          vn: "Bên mình chỉ nhận Tiền mặt và LINE Pay. Bạn có mã hóa đơn điện tử không?"
-        }
-      ],
-      2: [
-        {
-          num: "Step 5",
-          zh: "5. 掃 QR Code 加入 LINE 社群與密碼",
-          en: "Scan this QR code to join our LINE group! Enter the password shown on this card.",
-          jp: "QRコードをスキャンしてLINEグループにご参加ください！パスワードはカードにあります。",
-          kr: "QR 코드를 스캔하여 LINE 그룹에 가입해 보세요! 비밀번호는 카드에 있습니다.",
-          vn: "Quét mã QR này để tham gia nhóm LINE nhé! Mật khẩu có trên thẻ QR."
-        },
-        {
-          num: "Step 6",
-          zh: "6. 點擊置頂連結 (登入自己人會員與優惠券)",
-          en: "Click the pinned post in LINE to access our Member System & Coupons!",
-          jp: "LINEのピン留め投稿をタップして、会員システムとクーポンをご確認ください！",
-          kr: "LINE 상단 고정 공지를 눌러 회원 시스템과 쿠폰을 확인해 보세요!",
-          vn: "Bấm vào tin nhắn ghim trong LINE để vào hệ thống thành viên và xem ưu đãi nhé!"
-        },
-        {
-          num: "Step 6-1",
-          zh: "6-1. 出示會員 QR Code 讓店員掃描集點",
-          en: "To collect points, open your Member QR code and I'll scan it for you!",
-          jp: "ポイントを貯めるには、会員QRコードを表示してください。スキャンいたします！",
-          kr: "적립을 원하시면 회원 QR 코드를 보여주세요. 스캔해 드릴게요!",
-          vn: "Để tích điểm, bạn mở mã QR thành viên để mình quét nhé!"
-        }
-      ],
-      3: [
-        {
-          num: "Step 7",
-          zh: "7. 寄物 ➔ 圍裙 ➔ 洗手 ➔ 座位等待開啟平板",
-          en: "Please put your bags in a locker ➔ put on an apron ➔ wash your hands ➔ return to your seat. I'll set up your tablet!",
-          jp: "ロッカーに荷物を入れ ➔ エプロンを着け ➔ 手を洗い ➔ お席でお待ちください。タブレットをご用意します！",
-          kr: "사물함에 짐을 넣고 ➔ 앞치마를 두르고 ➔ 손을 씻고 ➔ 자리에 앉아 기다려 주세요. 태블릿을 켜드릴게요!",
-          vn: "Bạn cất đồ vào tủ ➔ đeo tạp dề ➔ rửa tay ➔ về chỗ ngồi chờ mình mở máy tính bảng nhé!"
-        },
-        {
-          num: "Step 8",
-          zh: "8. 平板右滑操作與門市 4 大區域導覽",
-          en: "Swipe right for instructions. Check tablet for item locations:\n🧭 Middle: Ingredients\n🪟 Window: Mixing\n🔥 Behind: Decor & Ovens\n🧽 Back: Washing Sinks",
-          jp: "右スワイプで手順が進みます。\n🧭 中央: 材料区\n🪟 窓側: ミキサー区\n🔥 後方: 装飾・オーブン\n🧽 一番奥: 洗い場",
-          kr: "오른쪽으로 넘기면 다음 단계입니다.\n🧭 중앙: 재료 구역\n🪟 창가: 반죽 구역\n🔥 뒤쪽: 장식 및 오븐\n🧽 맨 안쪽: 설거지 구역",
-          vn: "Vuốt sang phải để xem hướng dẫn.\n🧭 Ở giữa: Nguyên liệu\n🪟 Cửa sổ: Đánh bột\n🔥 Phía sau: Trang trí & Lò nướng\n🧽 Trong cùng: Khu rửa"
-        },
-        {
-          num: "Step 9",
-          zh: "9. 開始 DIY 製作與問答提示",
-          en: "You can start now! If you have any questions, feel free to ask us anytime. Enjoy!",
-          jp: "それではスタートです！ご不明な点があれば、いつでもスタッフにお声がけください！",
-          kr: "이제 시작하시면 됩니다! 궁금한 점이 있으면 언제든 편하게 물어보세요!",
-          vn: "Bạn có thể bắt đầu làm rồi! Nếu có thắc mắc gì cứ hỏi mình nhé!"
-        }
-      ]
-    };
-
-    // AI 對話預設範例
-    const multiLangData = {
-      birthday: {
-        summary: "💡 說明重點：熱情祝賀壽星，並說明陪伴者需選擇製作品項或付陪伴費以維護門市體驗品質。",
-        speech: storePolicyDB.bday
+    // 3. 親切引導與社群話術資料庫 (動態切換 4 語)
+    const interactionData = {
+      follow: {
+        en: '"Please follow me! I\'ll walk you to the station. ✂️"',
+        jp: '"こちらへどうぞ！ご案内いたします。✂️"',
+        kr: '"이쪽으로 오세요! 안내해 드릴게요. ✂️"',
+        vn: '"Xin đi theo tôi! Tôi sẽ dẫn bạn đến khu vực đó. ✂️"'
       },
-      allergen: {
-        summary: "💡 說明重點：確認無堅果/花生成分，但含有麩質與蛋奶，並提供原料標示卡。",
-        speech: {
-          en: "This recipe is 100% peanut and tree-nut free! However, it contains dairy, eggs, and gluten. Please let us know if you have any severe allergies!",
-          jp: "このレシピはピーナッツ・ナッツ類不使用です！ただし、乳製品、卵、小麦粉（グルテン）が含まれています。",
-          kr: "이 레시피는 땅콩 및 견과류가 전혀 들어가지 않습니다! 하지만 유제품, 계란, 글루텐이 포함되어 있습니다.",
-          vn: "Công thức này hoàn toàn không có đậu phộng và hạt! Tuy nhiên, nó có chứa sữa, trứng và gluten."
-        }
+      praise: {
+        en: '"Your cake looks incredible! 🎉 Would you like me to take a photo or short video for you?"',
+        jp: '"すごい！素晴らしいケーキができましたね！🎉 お写真や動画をお撮りしましょうか？"',
+        kr: '"케이크가 정말 멋져요! 🎉 사진이나 짧은 동영상을 찍어드릴까요?"',
+        vn: '"Chiếc bánh của bạn trông thật tuyệt vời! 🎉 Bạn có muốn mình chụp ảnh hoặc quay video giúp không?"'
       },
-      location: {
-        summary: "💡 說明重點：引導至洞洞牆區 A2 與模具區 D 層架。",
-        speech: {
-          en: "The scissors are on the Pegboard Wall (Hook A2), and the Square Molds are located at Molds Station (Shelf D). I can walk you there!",
-          jp: "ハサミは有孔ボードエリア（フックA2）にあり、角型金型は型エリア（棚D）にございます。ご案内いたします！",
-          kr: "가위는 페그보드 벽(고리 A2)에 있고, 사각 틀은 몰드 구역(선반 D)에 있습니다. 제가 안내해 드릴게요!",
-          vn: "Kéo ở trên Tường Tấm Lỗ (Móc A2), và Khuôn Vuông ở Khu Vực Khuôn (Kệ D). Tôi có thể dẫn bạn đến đó!"
-        }
-      },
-      wash: {
-        summary: "💡 說明重點：說明自助洗滌區位置，並提示提供溫水與烘乾設備。",
-        speech: storePolicyDB.wash
+      social: {
+        en: 'Official Social Tags:\n#自己做烘焙聚樂部 #DIYBakingClub #TaipeiBaking #CakeDecorating @mydiybc',
+        jp: '公式SNSタグはこちらです：\n#自己做烘焙聚樂部 #DIYBakingClub #TaipeiBaking #CakeDecorating @mydiybc',
+        kr: '공식 SNS 태그입니다:\n#自己做烘焙聚樂部 #DIYBakingClub #TaipeiBaking #CakeDecorating @mydiybc',
+        vn: 'Thẻ mạng xã hội chính thức:\n#自己做烘焙聚樂部 #DIYBakingClub #TaipeiBaking #CakeDecorating @mydiybc'
       }
     };
 
-    // 🚀 核心智慧 3 層檢索與對應函式 (已被完全修復，絕不中斷)
+    const rawHashtags = "#自己做烘焙聚樂部 #DIYBakingClub #TaipeiBaking #CakeDecorating @mydiybc";
+
+    // 4. 多國門市 4 大區域名稱資料庫
+    const mapZoneData = {
+      en: { midTitle: "中間左右區", midDesc: "Ingredients Area (Pegboard)", winTitle: "靠窗區", winDesc: "Mixing Station", ovenTitle: "取料區後面", ovenDesc: "Decor & Ovens", washTitle: "再往後走", washDesc: "Washing Sinks" },
+      jp: { midTitle: "中間左右區", midDesc: "材料エリア (有孔ボード)", winTitle: "靠窗區", winDesc: "ミキサーエリア", ovenTitle: "取料區後面", ovenDesc: "オーブン・装飾", washTitle: "再往後走", washDesc: "洗い場" },
+      kr: { midTitle: "中間左右區", midDesc: "재료 구역 (페그보드)", winTitle: "靠窗區", winDesc: "반죽 구역", ovenTitle: "取料區後面", ovenDesc: "오븐 및 장식", washTitle: "再往後走", washDesc: "설거지 구역" },
+      vn: { midTitle: "中間左右區", midDesc: "Khu Nguyên Liệu (Tường lỗ)", winTitle: "靠窗區", winDesc: "Khu Đánh Bột", ovenTitle: "取料區後面", ovenDesc: "Lò Nướng & Trang Trí", washTitle: "再往後走", washDesc: "Khu Rửa" }
+    };
+
+    // 5. 9 步驟 SOP 資料庫
+    const sopDatabase = {
+      1: [
+        { num: "Step 1", zh: "1. 招呼與詢問預約", en: "Welcome to DIY Baking Club! Do you have a reservation?", jp: "いらっしゃいませ！ご予約はございますか？", kr: "안녕하세요! 예약하셨나요?", vn: "Chào mừng bạn đến với DIY Baking Club! Bạn có đặt chỗ trước không?" },
+        { num: "Step 2", zh: "2. 核對預約姓名與電話末三碼", en: "May I have your name and the last 3 digits of your phone number?", jp: "お名前とお電話番号の下3桁を教えていただけますか？", kr: "성함과 전화번호 뒷 3자리를 말씀해 주시겠어요?", vn: "Cho mình xin tên và 3 số cuối số điện thoại nhé?" },
+        { num: "Step 3", zh: "3. 確認要做品項 / 展示菜單", en: "Here is our menu. Which dessert would you like to make today?", jp: "こちらがメニューです。本日お作りになるスイーツをお選びください。", kr: "메뉴판입니다. 오늘 어떤 디저트를 만드시겠어요?", vn: "Đây là menu ạ. Hôm nay bạn muốn làm món bánh nào?" },
+        { num: "Step 4", zh: "4. 結帳 (僅 Cash/LINE Pay) 與載具詢問", en: "Payment is via Cash or LINE Pay only. Do you have an e-invoice carrier?", jp: "お支払いは現金またはLINE Payのみです。電子レシートのキャリアはお持ちですか？", kr: "결제는 현금과 LINE Pay만 가능합니다. 모바일 영수증 바코드가 있으신가요?", vn: "Bên mình chỉ nhận Tiền mặt và LINE Pay. Bạn có mã hóa đơn điện tử không?" }
+      ],
+      2: [
+        { num: "Step 5", zh: "5. 掃 QR Code 加入 LINE 社群與密碼", en: "Scan this QR code to join our LINE group! Enter the password shown on this card.", jp: "QRコードをスキャンしてLINEグループにご参加ください！パスワードはカードにあります。", kr: "QR 코드를 스캔하여 LINE 그룹에 가입해 보세요! 비밀번호는 카드에 있습니다.", vn: "Quét mã QR này để tham gia nhóm LINE nhé! Mật khẩu có trên thẻ QR." },
+        { num: "Step 6", zh: "6. 點擊置頂連結 (登入自己人會員與優惠券)", en: "Click the pinned post in LINE to access our Member System & Coupons!", jp: "LINEのピン留め投稿をタップして、会員システムとクーポンをご確認ください！", kr: "LINE 상단 고정 공지를 눌러 회원 시스템과 쿠폰을 확인해 보세요!", vn: "Bấm vào tin nhắn ghim trong LINE để vào hệ thống thành viên và xem ưu đãi nhé!" },
+        { num: "Step 6-1", zh: "6-1. 出示會員 QR Code 讓店員掃描集點", en: "To collect points, open your Member QR code and I'll scan it for you!", jp: "ポイントを貯めるには、会員QRコードを表示してください。スキャンいたします！", kr: "적립을 원하시면 회원 QR 코드를 보여주세요. 스캔해 드릴게요!", vn: "Để tích điểm, bạn mở mã QR thành viên để mình quét nhé!" }
+      ],
+      3: [
+        { num: "Step 7", zh: "7. 寄物 ➔ 圍裙 ➔ 洗手 ➔ 座位等待開啟平板", en: "Please put your bags in a locker ➔ put on an apron ➔ wash your hands ➔ return to your seat. I'll set up your tablet!", jp: "ロッカーに荷物を入れ ➔ エプロンを着け ➔ 手を洗い ➔ お席でお待ちください。タブレットをご用意します！", kr: "사물함에 짐을 넣고 ➔ 앞치마를 두르고 ➔ 손을 씻고 ➔ 자리에 앉아 기다려 주세요. 태블릿을 켜드릴게요!", vn: "Bạn cất đồ vào tủ ➔ đeo tạp dề ➔ rửa tay ➔ về chỗ ngồi chờ mình mở máy tính bảng nhé!" },
+        { num: "Step 8", zh: "8. 平板右滑操作與門市 4 大區域導覽", en: "Swipe right for instructions. Check tablet for item locations:\n🧭 Middle: Ingredients\n🪟 Window: Mixing\n🔥 Behind: Decor & Ovens\n🧽 Back: Washing Sinks", jp: "右スワイプで手順が進みます。\n🧭 中央: 材料区\n🪟 窓側: ミキサー区\n🔥 後方: 装飾・オーブン\n🧽 一番奥: 洗い場", kr: "오른쪽으로 넘기면 다음 단계입니다.\n🧭 중앙: 재료 구역\n🪟 창가: 반죽 구역\n🔥 뒤쪽: 장식 및 오븐\n🧽 맨 안쪽: 설거지 구역", vn: "Vuốt sang phải để xem hướng dẫn.\n🧭 Ở giữa: Nguyên liệu\n🪟 Cửa sổ: Đánh bột\n🔥 Phía sau: Trang trí & Lò nướng\n🧽 Trong cùng: Khu rửa" },
+        { num: "Step 9", zh: "9. 開始 DIY 製作與問答提示", en: "You can start now! If you have any questions, feel free to ask us anytime. Enjoy!", jp: "それではスタートです！ご不明な点があれば、いつでもスタッフにお声がけください！", kr: "이제 시작하시면 됩니다! 궁금한 점이 있으면 언제든 편하게 물어보세요!", vn: "Bạn có thể bắt đầu làm rồi! Nếu có thắc mắc gì cứ hỏi mình nhé!" }
+      ]
+    };
+
+    // 🚀 核心：動態新增對話訊息至 Chat Thread 流
     function sendInput() {
       const inputElem = document.getElementById('userInput');
       const inputVal = inputElem.value.trim();
       if (!inputVal) return;
 
       const lowerInput = inputVal.toLowerCase();
-      let matchedResponse = null;
-      let summaryText = "";
+      const threadContainer = document.getElementById('chatThread');
 
-      try {
-        // A. 第一層：檢索門市品項 (storeItemDB)
-        for (let item of storeItemDB) {
-          if (item.keywords && item.keywords.some(kw => lowerInput.includes(kw))) {
-            matchedResponse = `📍 【${item.name}】\n• Location (中文): ${item.locZh}\n• Location (English): ${item.locEn}\n💡 Note: ${item.desc}`;
-            summaryText = `💡 Item Location Found: 【${item.name}】`;
+      // 1. 新增顧客對話泡泡
+      let guestBubbleHtml = `
+        <div class="chat-bubble guest">
+          <span class="bubble-sender">👤 顧客發問 / 店員輸入</span>
+          <div class="bubble-content">
+            <div class="bubble-text-msg">${escapeHtml(inputVal)}</div>
+            <div class="zh-translation">💡 即時對照：正在由 AI 解析對應問題...</div>
+          </div>
+        </div>
+      `;
+      threadContainer.innerHTML += guestBubbleHtml;
+
+      // 2. 比對資料庫
+      let matchedResponse = null;
+
+      // A. 比對品項
+      for (let item of storeItemDB) {
+        if (item.keywords.some(kw => lowerInput.includes(kw))) {
+          matchedResponse = `📍 【${item.name}】\n• 中文位置：${item.locZh}\n• English Location: ${item.locEn}\n\n"It's located at ${item.locEn}. Please follow me!"`;
+          break;
+        }
+      }
+
+      // B. 比對規章
+      if (!matchedResponse) {
+        for (let key in storePolicyDB) {
+          const policy = storePolicyDB[key];
+          if (policy.keywords.some(kw => lowerInput.includes(kw))) {
+            matchedResponse = policy[currentLang] || policy.en;
             break;
           }
         }
-
-        // B. 第二層：檢索門市規章 (storePolicyDB - 變數名稱已完美對齊)
-        if (!matchedResponse) {
-          for (let key in storePolicyDB) {
-            const policy = storePolicyDB[key];
-            if (policy.keywords && policy.keywords.some(kw => lowerInput.includes(kw))) {
-              matchedResponse = policy[currentLang] || policy.en || policy.title;
-              summaryText = `💡 Policy Answer: ${policy.title}`;
-              break;
-            }
-          }
-        }
-      } catch (err) {
-        console.error("Match error:", err);
       }
 
-      // C. 第三層：不在資料庫內（或找不到匹配）的親切兜底回覆
+      // C. 防呆轉接提示
       if (!matchedResponse) {
         matchedResponse = "目前 AI 隨身助理無法處理此問題，請尋求現場門市夥伴（家事小精靈）協助！\n\n(Currently unable to process this request. Please ask our store staff for assistance.)";
-        summaryText = "⚠️ 系統提示：該問題非門市常規資料，已引導尋求現場店員協助。";
       }
 
-      // 渲染至畫面
-      document.getElementById('zhSummary').innerText = summaryText;
-      document.getElementById('targetSpeech').innerText = matchedResponse;
-      inputElem.value = '';
+      // 3. 新增 AI 建議回覆對話泡泡
+      let staffBubbleHtml = `
+        <div class="chat-bubble staff">
+          <span class="bubble-sender">🤖 AI 建議對話 (Staff Action)</span>
+          <div class="bubble-content">
+            <div class="bubble-text-msg">${escapeHtml(matchedResponse)}</div>
+            <div class="card-actions" style="margin-top: 8px;">
+              <button class="btn-mini" onclick="speakTextFromCard(this)">🔊 發音</button>
+              <button class="btn-mini primary" onclick="showBigTextFromCard(this)">📱 轉向展示</button>
+            </div>
+          </div>
+        </div>
+      `;
+      threadContainer.innerHTML += staffBubbleHtml;
 
-      // 自動切換到 AI 對話分頁 (安全切換)
+      // 清空輸入框並滾動至最底端
+      inputElem.value = '';
+      const viewContainer = document.querySelector('.view-container');
+      viewContainer.scrollTop = viewContainer.scrollHeight;
+
       switchNavTab('ai', document.getElementById('tab-ai'));
     }
 
-    // TAB 頁面切換
-    function switchNavTab(paneId, btnElem) {
-      document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
-      if (btnElem && btnElem.classList) {
-        btnElem.classList.add('active');
-      } else {
-        const targetBtn = document.getElementById('tab-' + paneId);
-        if (targetBtn) targetBtn.classList.add('active');
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function showBigTextFromCard(btnElem) {
+      const msgDiv = btnElem.closest('.bubble-content').querySelector('.bubble-text-msg');
+      if (msgDiv) {
+        showBigText(msgDiv.innerText);
       }
-
-      document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
-      const targetPane = document.getElementById('pane-' + paneId);
-      if (targetPane) targetPane.classList.add('active');
     }
 
-    // SOP 階段切換
-    function switchPhase(phaseNum, btnElem) {
-      currentPhase = phaseNum;
-      document.querySelectorAll('.phase-sub-btn').forEach(b => b.classList.remove('active'));
+    function speakTextFromCard(btnElem) {
+      const msgDiv = btnElem.closest('.bubble-content').querySelector('.bubble-text-msg');
+      if (msgDiv) {
+        speakText(msgDiv.innerText);
+      }
+    }
+
+    function copySocialTags() {
+      navigator.clipboard.writeText(rawHashtags).then(() => {
+        alert("已成功複製官方 IG/TikTok 標籤內容至剪貼簿！");
+      }).catch(err => {
+        alert("複製內容：\n" + rawHashtags);
+      });
+    }
+
+    // 切換語系並更新所有頁面
+    function setLang(lang, btnElem) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
       btnElem.classList.add('active');
+
       renderSOPCards();
+      renderPolicies();
+      renderMapZones();
+      renderInteractions();
     }
 
-    // 渲染 SOP 卡片
+    function renderInteractions() {
+      document.getElementById('follow-me-text').innerText = interactionData.follow[currentLang];
+      document.getElementById('praise-photo-text').innerText = interactionData.praise[currentLang];
+      document.getElementById('social-tag-text').innerText = interactionData.social[currentLang];
+    }
+
+    function renderMapZones() {
+      const data = mapZoneData[currentLang] || mapZoneData.en;
+      document.getElementById('zone-mid-title').innerText = data.midTitle;
+      document.getElementById('zone-mid-desc').innerText = data.midDesc;
+
+      document.getElementById('zone-win-title').innerText = data.winTitle;
+      document.getElementById('zone-win-desc').innerText = data.winDesc;
+
+      document.getElementById('zone-oven-title').innerText = data.ovenTitle;
+      document.getElementById('zone-oven-desc').innerText = data.ovenDesc;
+
+      document.getElementById('zone-wash-title').innerText = data.washTitle;
+      document.getElementById('zone-wash-desc').innerText = data.washDesc;
+    }
+
+    function renderPolicies() {
+      document.getElementById('policy-bday-text').innerText = storePolicyDB.bday[currentLang];
+      document.getElementById('policy-bowl-text').innerText = storePolicyDB.bowl[currentLang];
+      document.getElementById('policy-wash-text').innerText = storePolicyDB.wash[currentLang];
+      document.getElementById('policy-time-text').innerText = storePolicyDB.time[currentLang];
+    }
+
     function renderSOPCards() {
       const container = document.getElementById('sopCardList');
       container.innerHTML = '';
@@ -962,10 +806,10 @@
           <div class="sop-card">
             <span class="sop-badge">${item.num}</span>
             <div class="sop-title-zh">${item.zh}</div>
-            <div class="sop-trans-text" id="sop-text-${currentPhase}-${index}">${transText.replace(/\n/g, '<br>')}</div>
+            <div class="sop-trans-text" id="sop-val-${currentPhase}-${index}">${escapeHtml(transText)}</div>
             <div class="card-actions">
-              <button class="btn-mini" onclick="speakCurrentText('sop-text-${currentPhase}-${index}')">🔊 發音</button>
-              <button class="btn-mini primary" onclick="showBigTextById('sop-text-${currentPhase}-${index}')">📱 大字展示</button>
+              <button class="btn-mini" onclick="speakCurrentText('sop-val-${currentPhase}-${index}')">🔊 發音</button>
+              <button class="btn-mini primary" onclick="showBigTextById('sop-val-${currentPhase}-${index}')">📱 轉向展示</button>
             </div>
           </div>
         `;
@@ -973,54 +817,27 @@
       });
     }
 
-    // 更新規章翻譯文字
-    function renderPolicies() {
-      document.getElementById('policy-bday-text').innerText = storePolicyDB.bday[currentLang];
-      document.getElementById('policy-bowl-text').innerText = storePolicyDB.bowl[currentLang];
-      document.getElementById('policy-wash-text').innerText = storePolicyDB.wash[currentLang];
-      document.getElementById('policy-time-text').innerText = storePolicyDB.time[currentLang];
-      document.getElementById('map-container-guide-text').innerText = storePolicyDB.bowl[currentLang];
-    }
-
-    // 切換語系
-    function setLang(lang, btnElem) {
-      currentLang = lang;
-      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-      btnElem.classList.add('active');
-      document.getElementById('aiTag').innerText = `✨ AI 口譯建議 (Target: ${langVoiceMap[lang].label})`;
-
-      renderSOPCards();
-      renderPolicies();
-      renderCurrentScenarioSpeech();
-    }
-
-    // 快捷 Scenario 切換
-    function selectScenario(key) {
-      currentScenarioKey = key;
-      document.querySelectorAll('.chip-btn').forEach(btn => btn.classList.remove('active'));
-      document.getElementById('chip-' + key).classList.add('active');
-
-      const data = multiLangData[key];
-      document.getElementById('zhSummary').innerText = data.summary;
-      renderCurrentScenarioSpeech();
-    }
-
-    function renderCurrentScenarioSpeech() {
-      if (currentScenarioKey && multiLangData[currentScenarioKey]) {
-        const data = multiLangData[currentScenarioKey];
-        if (data.speech) {
-          const speechText = typeof data.speech === 'string' ? data.speech : (data.speech[currentLang] || data.speech.en);
-          document.getElementById('targetSpeech').innerText = speechText;
-        }
+    function switchNavTab(paneId, btnElem) {
+      document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+      if (btnElem && btnElem.classList) btnElem.classList.add('active');
+      else {
+        const targetBtn = document.getElementById('tab-' + paneId);
+        if (targetBtn) targetBtn.classList.add('active');
       }
+
+      document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
+      const targetPane = document.getElementById('pane-' + paneId);
+      if (targetPane) targetPane.classList.add('active');
     }
 
-    // 發音 TTS
-    function speakCurrentText(elementId) {
-      const elem = document.getElementById(elementId);
-      if (!elem) return;
-      const text = elem.innerText.replace(/^"|"$/g, '');
-      
+    function switchPhase(phaseNum, btnElem) {
+      currentPhase = phaseNum;
+      document.querySelectorAll('.phase-sub-btn').forEach(b => b.classList.remove('active'));
+      btnElem.classList.add('active');
+      renderSOPCards();
+    }
+
+    function speakText(text) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = langVoiceMap[currentLang].code;
@@ -1028,68 +845,50 @@
       window.speechSynthesis.speak(utterance);
     }
 
-    // 複製話術
-    function copyCurrentText(elementId) {
-      const elem = document.getElementById(elementId);
-      if (!elem) return;
-      navigator.clipboard.writeText(elem.innerText).then(() => {
-        alert(`已複製 [${langVoiceMap[currentLang].label}] 話術至剪貼簿！`);
-      });
+    function speakCurrentText(elemId) {
+      const elem = document.getElementById(elemId);
+      if (elem) speakText(elem.innerText);
     }
 
-    // 大字展示 (Flip to Guest)
-    function showBigTextById(elementId) {
-      const elem = document.getElementById(elementId);
-      if (!elem) return;
-      document.getElementById('bigTextContent').innerText = elem.innerText.replace(/^"|"$/g, '');
+    function showBigText(text) {
+      document.getElementById('bigTextContent').innerText = text;
       document.getElementById('bigTextModal').classList.add('active');
+    }
+
+    function showBigTextById(elemId) {
+      const elem = document.getElementById(elemId);
+      if (elem) showBigText(elem.innerText);
     }
 
     function closeBigText() {
       document.getElementById('bigTextModal').classList.remove('active');
     }
 
-    // 語音輸入辨識
     let isRecognizing = false;
     let recognition = null;
     function toggleMic() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        alert("您的瀏覽器不支援語音辨識，請使用 Chrome 或 Safari 瀏覽器！");
-        return;
-      }
+      if (!SpeechRecognition) { alert("瀏覽器不支援語音輸入！"); return; }
       const micBtn = document.getElementById('micBtn');
-      if (isRecognizing && recognition) {
-        recognition.stop();
-        return;
-      }
+      if (isRecognizing && recognition) { recognition.stop(); return; }
       recognition = new SpeechRecognition();
       recognition.lang = 'zh-TW';
-      recognition.interimResults = false;
-
-      recognition.onstart = function() {
-        isRecognizing = true;
-        micBtn.classList.add('recording');
-        document.getElementById('userInput').placeholder = "正在聆聽，請說話...";
-      };
+      recognition.onstart = function() { isRecognizing = true; micBtn.classList.add('recording'); };
       recognition.onresult = function(event) {
-        if (event.results && event.results && event.results) {
+        if (event.results && event.results) {
           document.getElementById('userInput').value = event.results.transcript;
           sendInput();
         }
       };
-      recognition.onerror = function() { alert("未接收到語音，請重試！"); };
-      recognition.onend = function() {
-        isRecognizing = false;
-        micBtn.classList.remove('recording');
-        document.getElementById('userInput').placeholder = "輸入品項(剪刀/scissors)或問題...";
-      };
+      recognition.onend = function() { isRecognizing = false; micBtn.classList.remove('recording'); };
       recognition.start();
     }
 
-    // 初始化載入
+    // 初始載入
     renderSOPCards();
     renderPolicies();
+    renderMapZones();
+    renderInteractions();
   </script>
 </body>
 </html>
